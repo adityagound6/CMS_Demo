@@ -1,4 +1,6 @@
 ﻿using CMS_Demo.Models;
+using CMS_Demo.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -37,6 +39,30 @@ namespace CMS_Demo.Controllers
             {
                 return View();
             }
+        }
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Users user = new Users
+                {
+                    Email = model.Email,
+                    UserName = model.Email,
+                    Name = model.Name,
+                    Password = model.Password
+                };
+                _con.Users.Add(user);
+                HttpContext.Session.SetString("UserName",user.UserName);
+                ViewBag.Session = HttpContext.Session.GetString("UserName");
+                return RedirectToAction("Index");
+            }
+            return View();
         }
     }
 }

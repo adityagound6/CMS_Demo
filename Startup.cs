@@ -26,8 +26,10 @@ namespace CMS_Demo
         {
             services.AddDbContextPool<AppDbContext>(option =>
             option.UseSqlServer(_config.GetConnectionString("DBConnection")));
-
+            services.AddDistributedMemoryCache();
+            services.AddSession();
             services.AddMvc(options => options.EnableEndpointRouting = false);
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +40,8 @@ namespace CMS_Demo
                 app.UseDeveloperExceptionPage();
             }
             app.UseStaticFiles();
+            app.UseSession();
+            app.UseAuthentication();
             app.UseRouting();
             app.UseMvc(route => {
                 route.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
