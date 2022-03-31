@@ -37,7 +37,7 @@ namespace CMS_Demo
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseStaticFiles();
             app.UseRouting();
             app.UseMvc(route => {
                 route.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
