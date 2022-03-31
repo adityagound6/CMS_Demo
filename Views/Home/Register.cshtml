@@ -1,0 +1,43 @@
+﻿@model RegisterViewModel;
+
+
+@{
+    ViewBag.PageTitle = "Register";
+}
+
+<a></a>
+
+<div class="row justify-content-center m-3">
+    <div class="col-sm-2">
+        <form asp-action="Register" asp-controller="Home" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="Email">
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Name">Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Name">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" class="form-control" placeholder="Password">
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword">Confirm Password</label>
+                <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password">
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+            <br />
+            <br />
+
+            <p>If you have already account <a asp-action="LogIn" asp-controller="index">login</a></p>
+        </form>
+    </div>
+</div>
