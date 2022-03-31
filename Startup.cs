@@ -26,7 +26,7 @@ namespace CMS_Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<AppDbContext>(option =>
-            option.UseSqlServer(_config.GetConnectionString("EmployeeDBConnection")));
+            option.UseSqlServer(_config.GetConnectionString("DbConnection")));
 
             services.AddMvc(options => options.EnableEndpointRouting = false);
             /* services.AddDbContextPool<AppDbContext>(
