@@ -81,5 +81,26 @@ namespace CMS_Demo.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
+        public IActionResult AddPage()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddPage(AddPageViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                AddPage pages = new AddPage
+                {
+                    PageName = model.PageName,
+                    Description = model.Description,
+                    Status = true
+                };
+                _con.AddPages.Add(pages);
+                return RedirectToAction("Home");
+            }
+            //ModelState.AddModelError("", "Invalid");
+            return View(model);
+        }
     }
 }
