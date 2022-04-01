@@ -2,13 +2,14 @@
 
 
 @{
-    ViewBag.PageTitle = "Register";
+    ViewBag.Title = "Register";
 }
 
 <a></a>
 
 <div class="row justify-content-center m-3">
     <div class="col-sm-2">
+        <h3>@ViewBag.Title</h3>
         <form asp-action="Register" asp-controller="Home" method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
@@ -37,7 +38,7 @@
             <br />
             <br />
 
-            <p>If you have already account <a asp-action="LogIn" asp-controller="Account">login</a></p>
+            <p>If you have already account <a asp-action="LogIn" asp-controller="Home">login</a></p>
         </form>
     </div>
 </div>
