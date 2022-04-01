@@ -19,12 +19,12 @@ namespace CMS_Demo.Controllers
             _con = con;
         }
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Login()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Index(string Email, string Password)
+        public IActionResult Login(string Email, string Password)
         {
             try
             {
@@ -35,12 +35,11 @@ namespace CMS_Demo.Controllers
                 }
                 return View("Home");
             }
-            catch (DbException)
+            catch(DbException)
             {
                 return View();
             }
         }
-
         [HttpGet]
         public IActionResult Register()
         {
@@ -58,10 +57,9 @@ namespace CMS_Demo.Controllers
                     Name = model.Name,
                     Password = model.Password
                 };
-                 _con.Users.Add(user);
-                var status = _con.SaveChanges();
-                //HttpContext.Session.SetString("UserName", user.UserName);
-                //ViewBag.Session = HttpContext.Session.GetString("UserName");
+                _con.Users.Add(user);
+                HttpContext.Session.SetString("UserName",user.UserName);
+                ViewBag.Session = HttpContext.Session.GetString("UserName");
                 return RedirectToAction("Index");
             }
             return View();
