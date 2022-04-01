@@ -36,7 +36,7 @@
                 else
                 {
                     <li class="nav-item">
-                        <a class="nav-link text-white" asp-action="Logout" asp-controller="Home">LogOut</a>
+                        <a class="nav-link text-white" asp-action="Logout" asp-controller="Home">LogOut @Context.Session.GetString("UserName")</a>
                     </li>
                 }
 

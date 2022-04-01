@@ -19,6 +19,11 @@ namespace CMS_Demo.Controllers
             _con = con;
         }
         [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
@@ -35,7 +40,7 @@ namespace CMS_Demo.Controllers
                 }
                 HttpContext.Session.SetString("UserName", user.UserName);
                 ViewBag.Session = HttpContext.Session.GetString("UserName");
-                return View("index");
+                return RedirectToAction("index");
             }
             catch(DbException)
             {
@@ -65,7 +70,7 @@ namespace CMS_Demo.Controllers
                 {
                     HttpContext.Session.SetString("UserName", user.UserName);
                     ViewBag.Session = HttpContext.Session.GetString("UserName");
-                    return RedirectToAction("Index");
+                    return RedirectToAction("index");
                 }
                 return View();
             }
@@ -74,7 +79,7 @@ namespace CMS_Demo.Controllers
         public IActionResult LogOut()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("Index");
+            return RedirectToAction("Login");
         }
     }
 }
