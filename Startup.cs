@@ -44,7 +44,7 @@ namespace CMS_Demo
             app.UseAuthentication();
             app.UseRouting();
             app.UseMvc(route => {
-                route.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                route.MapRoute("default", "{controller=Home}/{action=login}/{id?}");
 
             });
         }

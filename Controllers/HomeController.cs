@@ -19,12 +19,12 @@ namespace CMS_Demo.Controllers
             _con = con;
         }
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Login()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Index(string Email, string Password)
+        public IActionResult Login(string Email, string Password)
         {
             try
             {
