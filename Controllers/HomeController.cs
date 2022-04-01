@@ -28,11 +28,13 @@ namespace CMS_Demo.Controllers
         {
             try
             {
-                var user = _con.Users.Where(s => s.Email == Email & s.Password == Password);
+                var user = _con.Users.Where(s => s.Email == Email & s.Password == Password).FirstOrDefault();
                 if (user == null)
                 {
                     return View();
                 }
+                HttpContext.Session.SetString("UserName", user.UserName);
+                ViewBag.Session = HttpContext.Session.GetString("UserName");
                 return View("index");
             }
             catch(DbException)
@@ -63,7 +65,7 @@ namespace CMS_Demo.Controllers
                 {
                     HttpContext.Session.SetString("UserName", user.UserName);
                     ViewBag.Session = HttpContext.Session.GetString("UserName");
-                    return RedirectToAction("Login");
+                    return RedirectToAction("Index");
                 }
                 return View();
             }
