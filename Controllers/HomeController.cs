@@ -33,6 +33,9 @@ namespace CMS_Demo.Controllers
                 {
                     return View();
                 }
+                HttpContext.Session.SetString("UserName", user.FirstOrDefault().UserName);
+                ViewBag.Session = HttpContext.Session.GetString("UserName");
+
                 return View("Home");
             }
             catch(DbException)
@@ -58,11 +61,17 @@ namespace CMS_Demo.Controllers
                     Password = model.Password
                 };
                 _con.Users.Add(user);
+                _con.SaveChanges();
                 HttpContext.Session.SetString("UserName",user.UserName);
                 ViewBag.Session = HttpContext.Session.GetString("UserName");
                 return RedirectToAction("Index");
             }
             return View();
+        }
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index");
         }
     }
 }
