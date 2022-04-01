@@ -69,5 +69,10 @@ namespace CMS_Demo.Controllers
             }
             return View();
         }
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index");
+        }
     }
 }

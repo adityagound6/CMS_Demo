@@ -22,20 +22,24 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             
             <ul class="navbar-nav ml-auto">
-               
-                    <li>
-                        <form asp-action="LogOut" asp-controller="Account" method="post">
-                            <button type="submit" class="nav-link btn-btn-link bg-secondary text-white">Logout @User.Identity.Name</button>
 
-                        </form>
-                    </li>
-                
+
+                @if (Context.Session.GetString("UserName") == null)
+                {
                     <li class="nav-item">
                         <a class="nav-link text-white" asp-action="Register" asp-controller="Home">Regiter</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" asp-action="Login" asp-controller="home">LogIn</a>
                     </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-action="Register" asp-controller="Home">Regiter</a>
+                    </li>
+                }
+
             </ul>
         </div>
     </nav>
