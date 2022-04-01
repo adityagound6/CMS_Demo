@@ -13,7 +13,5 @@ namespace CMS_Demo.Models
 
         }
         public DbSet<Users> Users { get; set; }
-        public DbSet<AddPage> AddPages { get; set; }
-
     }
 }
