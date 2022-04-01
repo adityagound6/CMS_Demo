@@ -33,7 +33,7 @@ namespace CMS_Demo.Controllers
                 {
                     return View();
                 }
-                return View("Home");
+                return View("index");
             }
             catch(DbException)
             {
@@ -58,9 +58,14 @@ namespace CMS_Demo.Controllers
                     Password = model.Password
                 };
                 _con.Users.Add(user);
-                HttpContext.Session.SetString("UserName",user.UserName);
-                ViewBag.Session = HttpContext.Session.GetString("UserName");
-                return RedirectToAction("Index");
+                var status = _con.SaveChanges();
+                if(status == 1)
+                {
+                    HttpContext.Session.SetString("UserName", user.UserName);
+                    ViewBag.Session = HttpContext.Session.GetString("UserName");
+                    return RedirectToAction("Login");
+                }
+                return View();
             }
             return View();
         }
