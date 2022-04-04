@@ -7,38 +7,48 @@
 
 <a></a>
 
-<div class="row justify-content-center m-3">
-    <div class="col-sm-2">
-        <h3>@ViewBag.Title</h3>
-        <form asp-action="Register" asp-controller="Admin" method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email">Email</label>
+<div class="shadow-lg p-3 mb-5 bg-white rounded col-9">
+    <h3 class="text-center">@ViewBag.Title</h3>
+    <form class="card-body" asp-action="Register" asp-controller="Admin" method="post">
+        
+        <div class="form-group row mb-2">
+            <label asp-for="Email" class="col-sm-3 col-form-label">Email</label>
+            <div class="col-sm-9">
                 <input asp-for="Email" class="form-control" placeholder="Email">
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Name">Name</label>
+        <div class="form-group row mb-2">
+            <label asp-for="Name" class="col-sm-3 col-form-label">Name</label>
+            <div class="col-sm-9">
                 <input asp-for="Name" class="form-control" placeholder="Name">
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Password">Password</label>
+        <div class="form-group row mb-2">
+            <label asp-for="Password" class="col-sm-3 col-form-label">Password</label>
+            <div class="col-sm-9">
                 <input asp-for="Password" class="form-control" placeholder="Password">
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword">Confirm Password</label>
+        </div>
+        <div class="form-group row mb-2">
+            <label asp-for="ConfirmPassword" class="col-sm-3 col-form-label">Confirm Password</label>
+            <div class="col-sm-9">
                 <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password">
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
-            <br />
-            <br />
+        </div>
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-9">
+                <button type="submit" class="btn btn-primary">Register</button>
+                <p>Already have an account <a asp-action="LogIn" asp-controller="Admin">login</a></p>
+            </div>
+        </div>
 
-            <p>If you have already account <a asp-action="LogIn" asp-controller="Home">login</a></p>
-        </form>
-    </div>
+       
+    </form>
 </div>

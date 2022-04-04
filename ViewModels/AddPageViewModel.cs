@@ -8,10 +8,10 @@ namespace CMS_Demo.ViewModels
 {
     public class AddPageViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Please Enter a valid page Name")]
         public string PageName { get; set; }
-        [Required]
+        [Required(ErrorMessage="Please Enter a valid page Description")]
         public string Description { get; set; }
-        
+        public bool Status { get; set; }
     }
 }

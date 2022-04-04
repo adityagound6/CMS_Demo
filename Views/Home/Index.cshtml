@@ -21,11 +21,11 @@
 
     <script>
         $("#depid").change(function () {
-            getEmpByDeptId();
+            GetData();
         });
         function GetData(id) {
             $.ajax({
-                url: 'Home/Getdata/' + id,
+                url: '/Home/Getdata/' + id,
                 type: 'Post',
                 data: {
                 },

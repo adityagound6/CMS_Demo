@@ -102,10 +102,34 @@ namespace CMS_Demo.Controllers
                 {
                     return RedirectToAction("AddPage");
                 }
-                
             }
-            //ModelState.AddModelError("", "Invalid");
             return View(model);
+        }
+        public IList<AddPage> PageList()
+        {
+            List<AddPage> PageList = new List<AddPage>();
+            PageList = _con.AddPages.ToList();
+            return PageList;
+        }
+        [HttpGet]
+        public IActionResult ManagePage(int id)
+        {
+            var data = _con.AddPages.Find(id);
+            ViewBag.PageList = PageList();
+            return View(data);
+        }
+        [HttpPost]
+        public IActionResult ManagePage(AddPage model)
+        {
+            AddPage data = _con.AddPages.Find(model.PageId);
+           // AddPage pageViewModel = new AddPage();
+            //data.PageName = model.PageName;
+            data.Description = model.Description;
+            data.Status = model.Status;
+            _con.AddPages.Update(data);
+            //var checkStatus = _con.SaveChanges();
+            return View("ManagePage");
+            
         }
     }
 }
