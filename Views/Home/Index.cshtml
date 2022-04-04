@@ -11,7 +11,7 @@
 
     <div class="card mx-3 my-3">
         <div class="card-body" id="data">
-            <p>Your HTML Page</p>
+                <p>Your HTML Page</p>
         </div>
     </div>
 @section Scripts{
@@ -31,7 +31,9 @@
                 },
                 success: function (data) {
                     $('#data').find('p').remove()
-                    $('#data').append('<p>'+data+'</p>')
+                    $('#data').find('hr').remove()
+                    $('#data').append('<p>' + data.description + '</p>')
+                   
                 },
                 error: function () {
                 }
