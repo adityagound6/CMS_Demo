@@ -28,8 +28,8 @@ namespace CMS_Demo.Controllers
         public JsonResult Getdata(int id)
         {
             var model = _con.AddPages.Find(id);
-            string data = model.Description;
-            return Json(data);
+           // string data = model.Description;
+            return Json(model);
         }
 
     }
