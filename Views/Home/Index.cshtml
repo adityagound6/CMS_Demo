@@ -1,6 +1,41 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<AddPage>
 @{
+    ViewBag.Title = "Home";
 }
-<h1>Index</h1>
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #576858">
+    @foreach (var m in Model)
+    {
+        <button class="text-white bg-transparent m-1" onclick="GetData(@m.PageId)" id="@m.PageId">@m.PageName</button>
+    }
+</nav>
+
+    <div class="card mx-3 my-3">
+        <div class="card-body" id="data">
+            <p>Your HTML Page</p>
+        </div>
+    </div>
+@section Scripts{
+    <script>
+        new FroalaEditor('textarea#froala-editor')
+    </script>
+
+    <script>
+        $("#depid").change(function () {
+            getEmpByDeptId();
+        });
+        function GetData(id) {
+            $.ajax({
+                url: 'Home/Getdata/' + id,
+                type: 'Post',
+                data: {
+                },
+                success: function (data) {
+                    $('#data').find('p').remove()
+                    $('#data').append('<p>'+data+'</p>')
+                },
+                error: function () {
+                }
+            });
+        }
+    </script>
+}

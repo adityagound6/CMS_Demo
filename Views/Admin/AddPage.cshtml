@@ -1,0 +1,34 @@
+﻿@model AddPageViewModel
+
+@{
+    ViewBag.Title = "Add Page";
+}
+<div class="shadow-lg p-3 mb-5 bg-white rounded col-9" >
+    <form class="card-body " method="post">
+        <h3 class="text-center">Add Page</h3>
+        <hr />
+        <div class="form-group row">
+            <label asp-for="PageName" class="col-form-label"></label>
+            <div class="col">
+                <input asp-for="PageName" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="Description" class="col-form-label"></label>
+            <div class="col">
+                <textarea asp-for="Description" id="froala-editor"></textarea>
+            </div>
+        </div>
+        <div class="form-group row justify-content-center">
+            <input class="btn btn-secondary" style="width:55%" type="submit" value="Add Page" />
+        </div>
+    </form>
+</div>
+
+
+@section Scripts{
+
+    <script>
+        new FroalaEditor('textarea#froala-editor')
+    </script>
+}

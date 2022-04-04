@@ -3,8 +3,3 @@
 
 // Write your JavaScript code.
 
-function getResponce(deptId, empId) {
-    if (confirm("Are You sure To delete This User?") == true) {
-        window.location.replace(`/admin/delete?deptId=${deptId}&empId=${empId}`)
-    }
-}
