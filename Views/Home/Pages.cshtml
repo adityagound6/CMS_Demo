@@ -1,0 +1,11 @@
+﻿@model AddPage
+<div class="card mx-3 my-3">
+    <div class="card-body" id="data">
+        <p>@Model.Description</p>
+    </div>
+</div>
+@section Scripts{
+<script>
+        new FroalaEditor('textarea#froala-editor')
+</script>
+}

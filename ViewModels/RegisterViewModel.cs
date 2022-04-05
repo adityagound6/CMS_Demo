@@ -1,16 +1,20 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace CMS_Demo.ViewModels
 {
     public class RegisterViewModel
     {
         public string UserName { get; set; }
+        //[Remote(action: "IsEmailInUse", controller: "Admin")]
         [Required]
         [EmailAddress]
+        
         public string Email { get; set; }
         [DataType(DataType.Password)]
         public string Password { get; set; }

@@ -1,31 +1,32 @@
-﻿@model IEnumerable<AddPage>
+﻿@*@model AddPage*@
 @{
     ViewBag.Title = "Home";
 }
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #576858">
-    @foreach (var m in Model)
-    {
-        <button class="text-white bg-transparent m-1" onclick="GetData(@m.PageId)" id="@m.PageId">@m.PageName</button>
-    }
-</nav>
+
 
     <div class="card mx-3 my-3">
         <div class="card-body" id="data">
-                <p>Your HTML Page</p>
+            @*@{ 
+                if(Model != null) { <p>@Model.PageName</p>}
+            }*@
+           
         </div>
     </div>
+
 @section Scripts{
     <script>
         new FroalaEditor('textarea#froala-editor')
     </script>
-
-    <script>
+  
+    @*<script>
         $("#depid").change(function () {
             GetData();
         });
+        
+        
         function GetData(id) {
             $.ajax({
-                url: '/Home/Getdata/' + id,
+                url: '/Home/index/' + id,
                 type: 'Post',
                 data: {
                 },
@@ -33,11 +34,12 @@
                     $('#data').find('p').remove()
                     $('#data').find('hr').remove()
                     $('#data').append('<p>' + data.description + '</p>')
+                    history.pushState(null, '',  data.pageName );
                    
                 },
                 error: function () {
                 }
             });
         }
-    </script>
+    </script>*@
 }

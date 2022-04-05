@@ -1,5 +1,6 @@
 ﻿using CMS_Demo.Models;
 using CMS_Demo.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,6 +24,8 @@ namespace CMS_Demo.Controllers
         {
             return View();
         }
+
+        #region "Login,register and logout"
         [HttpGet]
         public IActionResult Login()
         {
@@ -36,6 +39,7 @@ namespace CMS_Demo.Controllers
                 var user = _con.Users.Where(s => s.Email == Email & s.Password == Password).FirstOrDefault();
                 if (user == null)
                 {
+                    ModelState.AddModelError("", "InValid UserId or Password.");
                     return View();
                 }
                 HttpContext.Session.SetString("UserName", user.UserName);
@@ -44,7 +48,7 @@ namespace CMS_Demo.Controllers
             }
             catch(DbException)
             {
-                return View();
+                return View("Login");
             }
         }
         [HttpGet]
@@ -81,6 +85,10 @@ namespace CMS_Demo.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
+
+        #endregion
+
+        [HttpGet]
         public IActionResult AddPage()
         {
             return View();
@@ -94,7 +102,9 @@ namespace CMS_Demo.Controllers
                 {
                     PageName = model.PageName,
                     Description = model.Description,
-                    Status = true
+                    Status = true,
+                    //SubPageId = null
+                   
                 };
                 _con.AddPages.Add(pages);
                 var status = _con.SaveChanges();
@@ -105,31 +115,119 @@ namespace CMS_Demo.Controllers
             }
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult AddSubPage()
+        {
+            ViewBag.PageList = PageList();
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddSubPage(AddSubPageViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                AddPage pages = new AddPage
+                {
+                    PageName = model.PageName,
+                    Description = model.Description,
+                    Status = true,
+                    SubPageId = model.PageId
+
+                };
+                _con.AddPages.Add(pages);
+                var status = _con.SaveChanges();
+                if (status == 1)
+                {
+                    return RedirectToAction("AddSubPage");
+                }
+            }
+            return View(model);
+        }
+
         public IList<AddPage> PageList()
         {
             List<AddPage> PageList = new List<AddPage>();
             PageList = _con.AddPages.ToList();
             return PageList;
         }
-        [HttpGet]
+        
+
+        [Route("Admin/ManagePage")]
+        public IActionResult ManagePage()
+        {
+            /*if (id != null)
+            {
+                AddPage data = _con.AddPages.Find(id);
+                if(data != null)
+                {
+                    ManagePageViewModel managePageView = new ManagePageViewModel
+                    {
+                        PageId = data.PageId,
+                        PageName = data.PageName,
+                        Description = data.Description,
+                        Status = data.Status
+                    };
+                    ViewBag.PageList = PageList();
+                    return View(managePageView);
+                }
+            }*/
+            ViewBag.PageList = PageList();
+            return View();
+        }
+
+        [Route("Admin/ManagePage/{id}")]
         public IActionResult ManagePage(int id)
         {
-            var data = _con.AddPages.Find(id);
-            ViewBag.PageList = PageList();
-            return View(data);
+
+            AddPage data = _con.AddPages.Find(id);
+            if (data != null)
+            {
+                ManagePageViewModel managePageView = new ManagePageViewModel
+                {
+                    PageId = data.PageId,
+                    PageName = data.PageName,
+                    Description = data.Description,
+                    Status = data.Status
+                };
+                ViewBag.PageList = PageList();
+                return View(managePageView);
+            }
+            return View();
         }
-        [HttpPost]
+
+        [HttpPost("Admin/ManagePage/{id}")]
         public IActionResult ManagePage(AddPage model)
         {
             AddPage data = _con.AddPages.Find(model.PageId);
-           // AddPage pageViewModel = new AddPage();
-            //data.PageName = model.PageName;
+            data.PageName = model.PageName;
             data.Description = model.Description;
             data.Status = model.Status;
             _con.AddPages.Update(data);
-            //var checkStatus = _con.SaveChanges();
-            return View("ManagePage");
+            _con.SaveChanges();
+            ModelState.Clear();
+            return RedirectToAction("Managepage");
             
         }
+
+        [HttpPost]
+        public JsonResult GetData(int id)
+        {
+            var data = _con.AddPages.Find(id);
+            return Json(data);
+        }
+      
+        //public async Task<IActionResult> IsEmailInUse(string email)
+        //{
+        //    var result = await _con.Users.FindAsync(email);
+        //    if (result == null)
+        //    {
+        //        return Json(true);
+        //    }
+        //    else
+        //    {
+        //        return Json("Email is Already in use.");
+        //    }
+        //}
     }
 }

@@ -18,18 +18,21 @@ namespace CMS_Demo.Controllers
         {
             _con = con;
         }
-        [HttpGet]
+        [HttpGet("home/index")]
+        [HttpGet("/")]
         public IActionResult Index()
         {
             var model = _con.AddPages;
             return View(model);
         }
-        [HttpPost]
-        public JsonResult Getdata(int id)
+       
+        [HttpGet("home/index/{id}")]
+        // [HttpGet]
+        public IActionResult Index(int id)
         {
-            var model = _con.AddPages.Find(id);
+            var data = _con.AddPages.Find(id);
            // string data = model.Description;
-            return Json(model);
+            return View("index",data);
         }
 
     }

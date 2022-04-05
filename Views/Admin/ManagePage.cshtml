@@ -1,21 +1,41 @@
-﻿@model AddPage
+﻿@model ManagePageViewModel
 @{
     ViewBag.Title = "Manage page";
 }
 <div class="shadow-lg p-3 mb-5 bg-white rounded col-9 card">
-    <form class="card-body" method="post" asp-controller="Admin" asp-action="managepage">
-        <input type="hidden" asp-for="PageId"/>
-        <label class="col-form-label">Pages</label>
-        <select class="form-control" onchange="getdata()" asp-for="PageName" 
-                asp-items='@(new SelectList( ViewBag.PageList ,"PageId","PageName"))'>
-            <option >--select--</option>
-        </select>
+    <form class="card-body" method="post" >
+
+        @*<input asp-for="SubPageId" hidden/>*@
+        @*@{
+            if (ViewBag.PageList != null)
+            {*@
+                <div class="form-group row">
+                   @* <label class="col-form-label">Select Page</label>*@
+                    <select asp-for="PageId" id="pageid" class="form-select mr-sm-2" onchange="GetData()"
+                            asp-items='@(new SelectList(ViewBag.PageList, "PageId", "PageName"))'>
+                        <option value="">--Select Page--</option>
+                    </select>
+                </div>
+          @*  }
+            else
+            {*@
+               <input asp-for="PageId" hidden/>
+                <div class="form-group row">
+                    <label class="col-form-label">Page Name</label>
+                    <div class="col" id="pagename">
+                        <input asp-for="PageName" class="form-control" />
+                        <span asp-validation-for="PageName" class="text-danger"></span>
+                    </div>
+                </div>
+         @*   }
+        }*@
+
+
 
         <div class="form-group row">
             <label class="col-form-label" asp-for="Description"></label>
-            <div class="col" id="dec">
-                <textarea id="froala-editor" asp-for="Description">
-                       </textarea>
+            <div class="col" id="description">
+                <textarea id="froala-editor" asp-for="Description"></textarea>
             </div>
         </div>
 
@@ -31,6 +51,7 @@
         <div class="form-group row">
             <div class="col-sm-10">
                 <button type="submit" class="btn btn-success">Update</button>
+                <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="btn btn-warning">Cancel</a>
             </div>
         </div>
     </form>
@@ -39,41 +60,44 @@
 @section Scripts{
     <script>
         new FroalaEditor('textarea#froala-editor')
-        function getdata() {
-            window.location.replace("/admin/managepage/" + $('#pageid').val())
+        function GetData() {
+            window.location.replace("/Admin/ManagePage/"+ $('#pageid').val())
         }
     </script>
 
-   @* <script>
-        $("#pageid").change(function () {
-            GetData($("#pageid").val());
-        });
-        function GetData(id) {
-            $.ajax({
-                url: '/Home/Getdata/' + id,
-                type: 'Post',
-                data: {
-                },
-                success: function (data) {
-                    $('#dec').find('div').remove()
-                    $('#dec').append(' <div class="col" id="dec" asp-for="Description"><textarea id="froala-editor" asp-for="Description">' +
-                        data.description + '</textarea></div>')
-                    new FroalaEditor('textarea#froala-editor')
-
-                    $('#pageStatus').find('input').remove()
-                    $('#pageStatus').find('span').remove()
-                  /*  $('#pageStatus').append('<input asp-for="pageid" hidden>')*/
-                    if (data.status == true) {
-                        $('#pageStatus').append(' <input type = "checkbox" asp-for="Status" checked><span class="slider round"></span>')
-                    } else {
-                        $('#pageStatus').append(' <input type = "checkbox" asp-for="Status"><span class="slider round"></span>')
-                    }
-                },
-                error: function () {
-                }
+    @* <script>
+            $("#pageid").change(function () {
+                GetData($("#pageid").val());
             });
-        }
+            function GetData(id) {
+                $.ajax({
+                    url: '/Admin/Getdata/' + id,
+                    type: 'Post',
+                    data: {
+                    },
+                    success: function (data) {
+                        //$('#pagename').find('input').remove()
+                        //$('#pagename').append(' <input asp-for="PageName" class="form-control" id="pagename" value='+data.pageName+'/>')
 
-        new FroalaEditor('textarea#froala-editor')
-    </script>*@
+                        $('#description').find('div').remove()
+                        $('#description').append(' <div class="col" id="description"><textarea id="froala-editor" asp-for="Description">' +
+                            data.description + '</textarea></div>')
+                        new FroalaEditor('textarea#froala-editor')
+
+                        $('#pageStatus').find('input').remove()
+                        $('#pageStatus').find('span').remove()
+                      /*  $('#pageStatus').append('<input asp-for="pageid" hidden>')*/
+                        if (data.status == true) {
+                            $('#pageStatus').append(' <input type = "checkbox" asp-for="Status" checked><span class="slider round"></span>')
+                        } else {
+                            $('#pageStatus').append(' <input type = "checkbox" asp-for="Status"><span class="slider round"></span>')
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }
+
+            new FroalaEditor('textarea#froala-editor')
+        </script>*@
 }

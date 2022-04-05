@@ -80,15 +80,15 @@ input:checked + .slider:before {
     text-decoration: none;
 }
 
-/*.sidebar a.active {
+.sidebar a.active {
     background-color: #04AA6D;
     color: white;
-}*/
+}
 
-/*.sidebar a:hover:not(.active) {
+.sidebar a:hover:not(.active) {
     background-color: #555;
     color: white;
-}*/
+}
 
 div.content {
     margin-left: 200px;
@@ -132,6 +132,7 @@ html {
         font-size: 16px;
     }
 }
+
 
 .border-top {
     border-top: 1px solid #e5e5e5;

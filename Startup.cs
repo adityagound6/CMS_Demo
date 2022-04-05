@@ -28,6 +28,7 @@ namespace CMS_Demo
             option.UseSqlServer(_config.GetConnectionString("DBConnection")));
             services.AddDistributedMemoryCache();
             services.AddSession();
+            //aservices.AddAuthorization();
             services.AddMvc(options => options.EnableEndpointRouting = false);
             
         }
