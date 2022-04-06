@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AddPage>
+﻿@model IndexViewModel
 
 <!doctype html>
 <html lang="en">
@@ -28,7 +28,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                @foreach (var m in Model)
+                @*@for(var m = 0; m < Model.NavBar.Count; m++)
+            {
+                    <h1>@Model.NavBar[m].PageName</h1>
+            }*@
+                @foreach (var m in Model.NavBar)
                 {
                     if (m.SubPageId == 0)
                     {
@@ -46,7 +50,7 @@
                                asp-action="Index" asp-controller="home" asp-route-id="@m.PageId">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </a>
-                            @foreach (var n in Model)
+                            @foreach (var n in Model.NavBar)
                             {
                                 if (n.SubPageId == m.PageId)
                                 {

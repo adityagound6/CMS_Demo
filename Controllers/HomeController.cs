@@ -22,17 +22,48 @@ namespace CMS_Demo.Controllers
         [HttpGet("/")]
         public IActionResult Index()
         {
-            var model = _con.AddPages;
-            return View(model);
+            AddPage data = _con.AddPages.Find(1);
+            List<AddPage> model = _con.AddPages.ToList();
+            IndexViewModel mod = new IndexViewModel();
+            if (mod.NavBar == null)
+            {
+                mod.NavBar = new List<AddPage>();
+            }
+            foreach (var addPage in model)
+            {
+                mod.NavBar.Add(addPage);
+            }
+            
+            if (mod.addPages == null)
+            {
+                mod.addPages = new List<AddPage>();
+            }
+            mod.addPages.Add(data);
+            return View(mod);
         }
-       
-        [HttpGet("home/index/{id}")]
+        //[HttpGet("/")]
+        [HttpGet("home/index/{id?}")]
         // [HttpGet]
         public IActionResult Index(int id)
         {
-            var data = _con.AddPages.Find(id);
+            AddPage data = _con.AddPages.Find(id);
+            List<AddPage> addPages = _con.AddPages.ToList();
+            IndexViewModel model = new IndexViewModel();
+            if (model.NavBar == null)
+            {
+                model.NavBar = new List<AddPage>();
+            }
+            foreach (var addPage in addPages)
+            {
+                model.NavBar.Add(addPage);
+            }
+            if (model.addPages == null)
+            {
+                model.addPages = new List<AddPage>();
+            }
+            model.addPages.Add(data);
            // string data = model.Description;
-            return View("index",data);
+            return View("index",model);
         }
 
     }

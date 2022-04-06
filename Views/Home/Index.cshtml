@@ -1,4 +1,4 @@
-﻿@*@model AddPage*@
+﻿@model IndexViewModel
 @{
     ViewBag.Title = "Home";
 }
@@ -6,10 +6,14 @@
 
     <div class="card mx-3 my-3">
         <div class="card-body" id="data">
-            @*@{ 
-                if(Model != null) { <p>@Model.PageName</p>}
-            }*@
-           
+            @if (Model.addPages == null)
+            {
+
+            }
+            else
+            {
+                <p>@Model.addPages[0].Description</p>
+            }
         </div>
     </div>
 
