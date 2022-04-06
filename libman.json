@@ -21,6 +21,11 @@
     {
       "library": "bootstrap@5.1.1",
       "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "froala-editor@4.0.4",
+      "destination": "wwwroot/lib/froala-editor/"
     }
   ]
 }

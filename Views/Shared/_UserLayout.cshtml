@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AddPage>
+﻿@model List<Nav_List>;
 
 <!doctype html>
 <html lang="en">
@@ -6,10 +6,10 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.10/css/froala_editor.pkgd.min.css" integrity="sha512-2pV+HRFqOhnsJg1HTGaZxIz27M0YLsRm1LrN5MN3kWbSbKWhRNRVFXfkKOeWJs5JDqe0gkV6kcdFJq/YDSkCGg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.10/css/froala_editor.min.css" integrity="sha512-nAJK2yafVBW/IqrSgLaNgFeISsusduUoQ8WTNDvHwdnThbiGoP3Myc4fq0Z0bGS8ZowxzGLafmPtHwTp2T5qRQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
 
     <title>@ViewBag.Title</title>
 </head>
@@ -28,36 +28,35 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+
                 @foreach (var m in Model)
                 {
                     if (m.SubPageId == 0)
                     {
-                        <li class="nav-item dropdown">
-                            @* <button type="button" class="btn btn-link text-white px-0">Action</button>
-                                <button type="button" class="btn btn-link px-0 text-white dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>*@
+                    <li class="nav-item mr-3">
+                        <a class="text-white px-0 text-decoration-none"
+                           asp-action="Index" asp-controller="home" asp-route-id="@m.PageId" style="outline-color:transparent">
+                            @m.PageName
+                        </a>
 
-                            <a class="btn btn-link text-white px-0 text-decoration-none"
-                               asp-action="Index" asp-controller="home" asp-route-id="@m.PageId" style="outline-color:transparent">
-                                @m.PageName
-                            </a>
-                            <a class="btn btn-link px-0 text-white dropdown-toggle dropdown-toggle-split mr-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                               asp-action="Index" asp-controller="home" asp-route-id="@m.PageId">
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </a>
+                        <ul class="dropdown">
                             @foreach (var n in Model)
                             {
                                 if (n.SubPageId == m.PageId)
                                 {
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-
-                                        <a class="dropdown-item" asp-action="Index"
-                                           asp-controller="home" asp-route-id="@n.PageId">@n.PageName</a>
-                                    </div>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-action="Index" asp-controller="home" asp-route-id="@n.PageId">@n.PageName</a>
+                                    </li>
                                 }
                             }
-                        </li>
+                        </ul>
+                    
+                    <a class=" px-0 text-white dropdown-toggle dropdown-toggle-split mr-3"
+                       asp-action="Index" asp-controller="home" asp-route-id="@m.PageId">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </a>
+                </li>
                     }
                 }
             </ul>
@@ -66,30 +65,23 @@
 
 
     <!--Body-->
-    @RenderBody()
-
+    <div>
+        @RenderBody()
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.10/js/froala_editor.min.js" integrity="sha512-M21u/bhNAlYd5NOd271FkyJrmFxRGOA492Y0g0T8d+5u7iGrAo6uTrBzxD3vV1HKMyTyYYehio3O+7LDvYHDYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="https://cdnout.com/froala-editor" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.10/js/froala_editor.min.js" integrity="sha512-M21u/bhNAlYd5NOd271FkyJrmFxRGOA492Y0g0T8d+5u7iGrAo6uTrBzxD3vV1HKMyTyYYehio3O+7LDvYHDYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
-    <script>
-        function getlink(pageid) {
-            if (document.getElementById("submenu").style.display == "none") {
-                document.getElementById("submenu").style.display = "block";
-            } else {
-                document.getElementById("submenu").style.display = "none";
-            }
-        }
-    </script>
+
 
 </body>
 </html>

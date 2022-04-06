@@ -18,22 +18,21 @@ namespace CMS_Demo.Controllers
         {
             _con = con;
         }
-        [HttpGet("home/index")]
+        [HttpGet("/{id}")]
         [HttpGet("/")]
-        public IActionResult Index()
+        public IActionResult Index(int? id)
         {
-            var model = _con.AddPages;
-            return View(model);
-        }
-       
-        [HttpGet("home/index/{id}")]
-        // [HttpGet]
-        public IActionResult Index(int id)
-        {
-            var data = _con.AddPages.Find(id);
-           // string data = model.Description;
-            return View("index",data);
-        }
+            List<Nav_List >nav_List = new List<Nav_List>();
+            nav_List = _con.AddPages.Select(x => new Nav_List{
 
+               PageId =  x.PageId,
+               PageName =  x.PageName,
+               SubPageId = x.SubPageId
+            }).ToList() ;
+
+            ViewBag.data = _con.AddPages.Find(id ?? 1).Description;
+           
+            return View(nav_List);
+        }
     }
 }
