@@ -6,44 +6,14 @@
 
     <div class="card mx-3 my-3">
         <div class="card-body" id="data">
-            @if (Model.addPages == null)
-            {
-
-            }
-            else
-            {
-                <p>@Model.addPages[0].Description</p>
-            }
+            <p>@Html.Raw(ViewBag.data)</p>
+           
         </div>
     </div>
 
 @section Scripts{
     <script>
-        new FroalaEditor('textarea#froala-editor')
+        new FroalaEditor('p#froala-editor')
     </script>
   
-    @*<script>
-        $("#depid").change(function () {
-            GetData();
-        });
-        
-        
-        function GetData(id) {
-            $.ajax({
-                url: '/Home/index/' + id,
-                type: 'Post',
-                data: {
-                },
-                success: function (data) {
-                    $('#data').find('p').remove()
-                    $('#data').find('hr').remove()
-                    $('#data').append('<p>' + data.description + '</p>')
-                    history.pushState(null, '',  data.pageName );
-                   
-                },
-                error: function () {
-                }
-            });
-        }
-    </script>*@
 }

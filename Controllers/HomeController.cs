@@ -18,53 +18,21 @@ namespace CMS_Demo.Controllers
         {
             _con = con;
         }
-        [HttpGet("home/index")]
+        [HttpGet("/{id}")]
         [HttpGet("/")]
-        public IActionResult Index()
+        public IActionResult Index(int? id)
         {
-            AddPage data = _con.AddPages.Find(1);
-            List<AddPage> model = _con.AddPages.ToList();
-            IndexViewModel mod = new IndexViewModel();
-            if (mod.NavBar == null)
-            {
-                mod.NavBar = new List<AddPage>();
-            }
-            foreach (var addPage in model)
-            {
-                mod.NavBar.Add(addPage);
-            }
-            
-            if (mod.addPages == null)
-            {
-                mod.addPages = new List<AddPage>();
-            }
-            mod.addPages.Add(data);
-            return View(mod);
-        }
-        //[HttpGet("/")]
-        [HttpGet("home/index/{id?}")]
-        // [HttpGet]
-        public IActionResult Index(int id)
-        {
-            AddPage data = _con.AddPages.Find(id);
-            List<AddPage> addPages = _con.AddPages.ToList();
-            IndexViewModel model = new IndexViewModel();
-            if (model.NavBar == null)
-            {
-                model.NavBar = new List<AddPage>();
-            }
-            foreach (var addPage in addPages)
-            {
-                model.NavBar.Add(addPage);
-            }
-            if (model.addPages == null)
-            {
-                model.addPages = new List<AddPage>();
-            }
-            model.addPages.Add(data);
-           // string data = model.Description;
-            return View("index",model);
-        }
+            List<Nav_List >nav_List = new List<Nav_List>();
+            nav_List = _con.AddPages.Select(x => new Nav_List{
 
+               PageId =  x.PageId,
+               PageName =  x.PageName,
+               SubPageId = x.SubPageId
+            }).ToList() ;
+
+            ViewBag.data = _con.AddPages.Find(id ?? 1).Description;
+           
+            return View(nav_List);
+        }
     }
 }

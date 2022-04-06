@@ -1,5 +1,33 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+
+ul li ul.dropdown {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background: #000000;
+    display: none;
+    position: absolute;
+    z-index: 999;
+}
+
+ul li:hover ul.dropdown {
+    display: block; /* Display the dropdown */
+    background: #000000;
+}
+ul li ul.dropdown li {
+    display: block;
+}
+
+.dropdown-item{
+    color:white !important;
+    background-color: transparent !important;
+}
+
+.dropdown-item:hover{
+    background-color:dodgerblue !important;
+}
+
 .switch {
     position: relative;
     display: inline-block;
