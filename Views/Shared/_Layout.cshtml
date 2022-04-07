@@ -46,17 +46,35 @@
         @if (Context.Session.GetString("UserName") != null)
         {
             @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #576868">*@
-            <div class="sidebar">
-                <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
-                    Menu
-                </a>
-                <a asp-controller="Admin" asp-action="addsubpage" class="list-group-item">
-                    Add SubMenu
-                </a>
-                <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
-                    Manage Menu
-                </a>
-            </div>
+<div class="sidebar">
+    @if (Context.Session.GetString("UserName") != "adityagound@gmail.com")
+    {
+        <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
+            Menu
+        </a>
+        <a asp-controller="Admin" asp-action="addsubpage" class="list-group-item">
+            Add SubMenu
+        </a>
+        <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
+            Manage Menu
+        </a>
+    }
+    else
+    {
+        <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
+            Menu
+        </a>
+        <a asp-controller="Admin" asp-action="addsubpage" class="list-group-item">
+            Add SubMenu
+        </a>
+        <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
+            Manage Menu
+        </a>
+        <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
+            Manage user
+        </a>
+    }
+</div>
 
         }
 

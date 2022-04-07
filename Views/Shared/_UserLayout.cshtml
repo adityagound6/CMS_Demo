@@ -1,5 +1,4 @@
 ﻿@model List<Nav_List>;
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -15,57 +14,64 @@
 </head>
 <body>
     <!--Nav Bar Or Header-->
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #576868">
-        <div class="container justify-content-center">
-            <a class="navbar-brand text-white" asp-controller="home" asp-route-id="">Welcome To CMS_Demo</a>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow fixed-top" style="background-color: #576868">
+        <div class="container">
+            @*<a class="navbar-brand text-white" asp-controller="home" asp-route-id="">Welcome To CMS_Demo</a>*@
+            <a class="navbar-brand text-white" asp-controller="home" asp-route-id="">
+                @ViewBag.ProjectName
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
-    </nav>
 
-
-    <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #576858">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+        <div class=" collapse navbar-collapse ml-0 justify-content-center" style="width: 100%;" id="navbarSupportedContent">
+            <ul class="navbar-nav">
 
                 @foreach (var m in Model)
                 {
                     if (m.SubPageId == 0)
                     {
-                    <li class="nav-item mr-3">
-                        <a class="text-white px-0 text-decoration-none"
-                           asp-action="Index" asp-controller="home" asp-route-id="@m.PageId" style="outline-color:transparent">
-                            @m.PageName
-                        </a>
+                        var count = 0;
+                        <li class="nav-item mr-3">
 
-                        <ul class="dropdown">
-                            @foreach (var n in Model)
-                            {
-                                if (n.SubPageId == m.PageId)
+                            <a class="text-white px-0 text-decoration-none m-2 "
+                               asp-action="Index" asp-controller="home" asp-route-id="@m.PageId" style="outline-color:transparent;">
+                                @m.PageName
+                            </a>
+
+                            <ul class="dropdown">
+                                @foreach (var n in Model)
                                 {
-                                    <li>
-                                        <a class="dropdown-item"
-                                           asp-action="Index" asp-controller="home" asp-route-id="@n.PageId">@n.PageName</a>
-                                    </li>
+                                    if (n.SubPageId == m.PageId)
+                                    {
+                                        count++;
+                                        <li>
+                                            <a class="dropdown-item"
+                                               asp-action="Index" asp-controller="home" asp-route-id="@n.PageId">@n.PageName</a>
+                                        </li>
+                                    }
+
+                                }
+                            </ul>
+                            @{
+                                if (count > 0)
+                                {
+                                    <a class=" px-0 text-white dropdown-toggle dropdown-toggle-split mr-3"
+                                       asp-action="Index" asp-controller="home" asp-route-id="@m.PageId">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </a>
                                 }
                             }
-                        </ul>
-                    
-                    <a class=" px-0 text-white dropdown-toggle dropdown-toggle-split mr-3"
-                       asp-action="Index" asp-controller="home" asp-route-id="@m.PageId">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </a>
-                </li>
+                        </li>
                     }
                 }
             </ul>
         </div>
     </nav>
 
-
     <!--Body-->
-    <div>
+    <div class="mt-5">
         @RenderBody()
     </div>
 
@@ -80,8 +86,9 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    @RenderSection("Scripts", required: false)
 
+
+    @RenderSection("Scripts", required: false)
 
 </body>
 </html>

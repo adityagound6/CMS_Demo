@@ -2,42 +2,33 @@
 @{
     ViewBag.Title = "Manage page";
 }
-<div class="shadow-lg p-3 mb-5 bg-white rounded col-9 card">
-    <form class="card-body" method="post" >
+<div class="shadow-lg p-3 mb-5 bg-white rounded col-12 card">
+    <form class="card-body" method="post">
 
         @*<input asp-for="SubPageId" hidden/>*@
         @*@{
-            if (ViewBag.PageList != null)
-            {*@
-                <div class="form-group row">
-                   @* <label class="col-form-label">Select Page</label>*@
-                    <select asp-for="PageId" id="pageid" class="custom-select mr-sm-2" onchange="GetData()"
-                            asp-items='@(new SelectList(ViewBag.PageList, "PageId", "PageName"))'>
-                        <option value="">--Select Page--</option>
-                    </select>
-                </div>
-          @*  }
-            else
-            {*@
-               <input asp-for="PageId" hidden/>
-                <div class="form-group row">
-                    <label class="col-form-label">Page Name</label>
-                    <div class="col" id="pagename">
-                        <input asp-for="PageName" class="form-control" />
-                        <span asp-validation-for="PageName" class="text-danger"></span>
-                    </div>
-                </div>
-         @*   }
-        }*@
-
-
-
+        if (ViewBag.PageList != null)
+        {*@
         <div class="form-group row">
-            <label class="col-form-label" asp-for="Description"></label>
-            <div class="col" id="description">
-                <textarea id="froala-editor" asp-for="Description"></textarea>
+            @* <label class="col-form-label">Select Page</label>*@
+            <select asp-for="PageId" id="pageid" class="custom-select mr-sm-2" onchange="GetData()"
+                    asp-items='@(new SelectList(ViewBag.PageList, "PageId", "PageName"))'>
+                <option value="">--Select Page--</option>
+            </select>
+        </div>
+        @*  }
+        else
+        {*@
+        <input asp-for="PageId" hidden />
+        <div class="form-group row">
+            <label class="col-form-label">Page Name</label>
+            <div class="col" id="pagename">
+                <input asp-for="PageName" class="form-control" />
+                <span asp-validation-for="PageName" class="text-danger"></span>
             </div>
         </div>
+        @*   }
+        }*@
 
         <div class="form-group row">
             <label class="col-form-label" asp-for="Status"></label>
@@ -49,14 +40,24 @@
                 </label>
                 <label class="">Show</label>
             </div>
-            </div>
+
+
             <div class="form-group row">
-                <div class="col-sm-10">
-                    <button type="submit" class="btn btn-success">Update</button>
-                    <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="btn btn-warning">Cancel</a>
+                <label class="col-form-label" asp-for="Description"></label>
+                <div class="col" id="description">
+                    <textarea id="froala-editor" class="col-12" asp-for="Description"></textarea>
                 </div>
             </div>
-</form>
+
+
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-success">Update</button>
+                <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="btn btn-warning">Cancel</a>
+            </div>
+        </div>
+    </form>
 </div>
 
 @section Scripts{
