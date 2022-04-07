@@ -24,7 +24,6 @@ namespace CMS_Demo.Controllers
         {
             return View();
         }
-
         #region "Login,register and logout"
         [HttpGet]
         public IActionResult Login()
@@ -216,7 +215,86 @@ namespace CMS_Demo.Controllers
             var data = _con.AddPages.Find(id);
             return Json(data);
         }
-      
+
+        [HttpGet]
+        public IActionResult AddSubUser()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddSubUser(AddSubUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Users user = new Users
+                {
+                    Email = model.Email,
+                    UserName = model.Email,
+                    Name = model.Email,
+                    Password = model.Password
+                };
+                _con.Users.Add(user);
+                var status = _con.SaveChanges();
+                if (status == 1)
+                {
+                    return RedirectToAction("AddSubUser");
+                }
+                return View();
+            }
+            return View();
+        }
+
+        public IActionResult ManageSubUser()
+        {
+            var Users = _con.Users;
+            return View(Users);
+        }
+
+        public bool DeleteSubUser(int id)
+        {
+            var User = _con.Users.Find(id);
+            if(User != null)
+            {
+                _con.Users.Remove(User);
+               int status = _con.SaveChanges();
+                if(status == 1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public IActionResult EditSubUser(int id)
+        {
+            Users User = _con.Users.Find(id);
+            EditSubUserViewModel subUserViewModel = new EditSubUserViewModel
+            {
+                UserId = User.UserId,
+                Email = User.Email,
+                Password = User.Password
+            };
+
+            return View(subUserViewModel);
+        }
+        [HttpPost]
+        public IActionResult EditSubUser(EditSubUserViewModel model)
+        {
+            Users User = _con.Users.Find(model.UserId);
+            if(User == null)
+            {
+                return View(model);
+            }
+            UserRole role = new UserRole();
+            EditSubUserViewModel subUserViewModel = new EditSubUserViewModel
+            {
+                UserId = User.UserId,
+                Email = User.Email,
+                Password = User.Password
+            };
+            return View(subUserViewModel);
+        }
+
         //public async Task<IActionResult> IsEmailInUse(string email)
         //{
         //    var result = await _con.Users.FindAsync(email);

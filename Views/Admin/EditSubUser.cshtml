@@ -1,0 +1,78 @@
+﻿@model EditSubUserViewModel;
+
+@{
+    ViewBag.Title = "Edit SubUser";
+}
+<div class="shadow-lg p-3 mb-5 bg-white rounded col-9">
+    <form class="card-body" asp-action="AddSubUser" asp-controller="Admin" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="UserId" >
+        <div class="form-group row mb-2">
+            <label asp-for="Email" class="col-sm-3 col-form-label">Email</label>
+            <div class="col-sm-9">
+                <input asp-for="Email" class="form-control" placeholder="Email">
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-2">
+            <label asp-for="Password" class="col-sm-3 col-form-label">Password</label>
+            <div class="col-sm-9">
+                <input asp-for="Password" class="form-control" placeholder="Password">
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        </div>
+        <hr />
+
+        <div class="form-group row">
+            <div class="col" id="showPermisson">
+                <label class="col-form-label">Sub Menu Permission</label>
+                <label class="switch" id="pageStatus">
+                    <input type="checkbox" id="showPermissonStatus" onchange="getMenu()">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <br />
+            <br />
+            <div class="form-group row ml-lg-2" style="display:none;" id="menu">
+                @{
+                    string[] MenuList = { "Menu", "Add SubMenu", "ManageMenu", "Add SubUser", "ManageSubUSer" };
+                    foreach (var list in MenuList)
+                    {
+                        <div class="col" style=" margin-left: 135px;" id="@list">
+                            <label class="switch ml-5" >
+                                <input type="checkbox" id="@list">
+                                <span class="slider round"></span>
+                            </label>
+                            <label class="col-form-label">@list</label>
+
+                        </div>  
+                    }
+                }
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-9">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts{
+    <script>
+        function getMenu() {
+            var checkedValue = document.getElementById('showPermissonStatus').value;
+            var menuStatus = document.getElementById("menu").style.display;
+            if (checkedValue) {
+                if (menuStatus == 'block') {
+                    document.getElementById("menu").style.display = "none";
+                }
+                else {
+                    document.getElementById("menu").style.display = "block";
+                }
+            } 
+        }
+    </script>
+}
