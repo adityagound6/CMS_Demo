@@ -47,7 +47,7 @@
         {
             @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #576868">*@
 <div class="sidebar">
-    @if (Context.Session.GetString("UserName") != "adityagound@gmail.com")
+    @if (Context.Session.GetString("UserName") != "yugal@gmail.com")
     {
         <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
             Menu
@@ -70,8 +70,11 @@
         <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
             Manage Menu
         </a>
-        <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
-            Manage user
+        <a asp-controller="Admin" asp-action="AddSubUser" asp-route-id="" class="list-group-item">
+            Add Sub User
+        </a>
+        <a asp-controller="Admin" asp-action="ManageSubUser" asp-route-id="" class="list-group-item">
+            Manage Sub User
         </a>
     }
 </div>

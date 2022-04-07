@@ -1,14 +1,14 @@
 ﻿@model CMS_Demo.ViewModels.LoginViewModel
 
 @{
-    ViewBag.Title = "Login Page";
+    ViewBag.Title = "Login Panel - CMS_Demo";
 }
 @if (Context.Session.GetString("UserName") == null)
 {
 <div class="shadow-lg p-3 mb-5 bg-white rounded col-9">
     
     <form class="card-body " method="post">
-        <h1 class="text-center">Login Form</h1>
+        <h1 class="text-center">@ViewBag.Title</h1>
         <hr />
         <div asp-validation-summary="All" class="text-danger"></div>
 

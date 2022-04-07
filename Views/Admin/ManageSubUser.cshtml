@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Users>
+@{ 
+    ViewBag.Title = " Manange SubUser";
+}
+
+<div class="shadow-lg p-3 mb-5 bg-white rounded col-9">
+    <h3 class="text-center">@ViewBag.Title</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Sr No.</th>
+                <th scope="col">User</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var count = 0;
+                foreach (var User in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+                        <td>@User.Email</td>
+                        <td><a  class="btn btn-warning" asp-controller="admin" asp-action="EditSubUser" asp-route-id="@User.UserId">Edit</a></td>
+                        <td><button type="button" class="btn btn-danger"  onclick="DeleteUser(@User.UserId)" >Delete</button></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+<script>
+    function DeleteUser(id, name) {
+        if (confirm("Are You Sure To Delete This User:" + name) == true) {
+            DeleteUserMethodCall(id);
+        }
+    }
+    function DeleteUserMethodCall(id) {
+        $.ajax ({
+            url: "/Admin/DeleteSubUser/" + id,
+            type: "Post",
+            data: {},
+            success: function (data) {
+                if (data == true) {
+                    alert("User deleted Successfully.")
+                    window.location.reload();
+                }
+                else {
+                    alert("Please Check the User roles and remove then Fisrt.")
+                }
+            },
+            error: function () { }
+        });
+    }
+
+</script>
+
+ }

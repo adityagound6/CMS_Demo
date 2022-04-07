@@ -14,6 +14,22 @@ namespace CMS_Demo.Models
         }
         public DbSet<Users> Users { get; set; }
         public DbSet<AddPage> AddPages { get; set; }
+        public DbSet<AddRole> AddRoles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<AddRole>()
+                .HasIndex(u => u.RoleName)
+                .IsUnique();
+
+            builder.Entity<Users>()
+               .HasIndex(u => u.Email)
+               .IsUnique();
+
+            builder.Entity<AddPage>()
+               .HasIndex(u => u.PageName)
+               .IsUnique();
+        }
 
     }
 }

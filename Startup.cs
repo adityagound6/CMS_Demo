@@ -1,4 +1,5 @@
 using CMS_Demo.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +29,8 @@ namespace CMS_Demo
             option.UseSqlServer(_config.GetConnectionString("DBConnection")));
             services.AddDistributedMemoryCache();
             services.AddSession();
-            //aservices.AddAuthorization();
+            /*services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+     .AddCookie(options => options.Cookie = cookiePolicyOptions);*/
             services.AddMvc(options => options.EnableEndpointRouting = false);
             
         }
@@ -44,6 +46,7 @@ namespace CMS_Demo
             app.UseSession();
             app.UseAuthentication();
             app.UseRouting();
+           // app.UseCookiePolicy(cookiePolicyOptions);
             app.UseMvc(route => {
                 route.MapRoute("default", "{controller=Home}/{action=index}/{id?}");
 
