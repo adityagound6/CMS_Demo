@@ -1,19 +1,15 @@
-﻿@*@model AddPage*@
-@{
-    ViewBag.Title = "Home";
+﻿@{
+    ViewBag.Title = @ViewBag.PageName;
 }
 
 
-    <div class="card mx-3 my-3">
-        <div class="card-body" id="data">
-            <p>@Html.Raw(ViewBag.data)</p>
-           
-        </div>
-    </div>
+<div class="card">
+    <p>@Html.Raw(ViewBag.Description)</p>
+
+</div>
 
 @section Scripts{
     <script>
         new FroalaEditor('p#froala-editor')
     </script>
-  
 }
