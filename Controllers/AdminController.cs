@@ -318,28 +318,23 @@ namespace CMS_Demo.Controllers
             User.Email = model.Email;
             User.Password = model.Password;
             var checkuser = _con.UserRoles.Where(x => x.UserId == model.UserId).ToList();
+            foreach(var userRol in checkuser)
+            {
+                var us = _con.UserRoles.Find(userRol.RoleId);
+                _con.UserRoles.Remove(us);
+                _con.SaveChanges();
+            }
             foreach (var x in model.isActive)
             {
                if(x.Value == true)
                {
-                    if(checkuser.Count == 0)
-                    {
-                        role.UserId = model.UserId;
-                        role.RoleId = x.Key;
-                        _con.Add(role);
-                        _con.SaveChanges();
-                    }
-                    foreach(var y in checkuser)
-                    {
-                        if(x.Key == y.RoleId)
-                        {
-                            break;
-                        }
-                    }
-                    
-               }
+                    role.UserId = model.UserId;
+                    role.RoleId = x.Key;
+                    _con.Add(role);
+                    _con.SaveChanges();
+                }
             }
-            return View();
+            return RedirectToAction("ManagePage");
         }
 
         //public async Task<IActionResult> IsEmailInUse(string email)
