@@ -4,7 +4,7 @@
     ViewBag.Title = "Edit SubUser";
 }
 <div class="shadow-lg p-3 mb-5 bg-white rounded col-9">
-    <form class="card-body" asp-action="AddSubUser" asp-controller="Admin" method="post">
+    <form class="card-body" asp-action="EditSubUser" asp-controller="Admin" method="post">
         <div asp-validation-summary="All" class="text-danger"></div>
         <input type="hidden" asp-for="UserId" >
         <div class="form-group row mb-2">
@@ -35,21 +35,28 @@
             <br />
             <br />
             <div class="form-group row ml-lg-2" style="display:none;" id="menu">
-                @{
-                    string[] MenuList = { "Menu", "Add SubMenu", "ManageMenu", "Add SubUser", "ManageSubUSer" };
-                    foreach (var list in MenuList)
-                    {
-                        <div class="col" style=" margin-left: 135px;" id="@list">
-                            <label class="switch ml-5" >
-                                <input type="checkbox" id="@list">
-                                <span class="slider round"></span>
-                            </label>
-                            <label class="col-form-label">@list</label>
+                @*@{
+            string[] MenuList = { "Menu", "Add SubMenu", "ManageMenu", "Add SubUser", "ManageSubUSer" };
+            foreach (var list in Model.isActive)
+            {
+                <div class="col" style=" margin-left: 135px;" id="@list">
+                    <label class="switch ml-5">
+                        <input type="checkbox" id="@list.Value">
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="col-form-label">@list</label>
 
-                        </div>  
+                </div>
+            }
+        }*@
+
+                @{
+                    foreach (var x in Model.isActive)
+                    {
+                                <span> @Html.CheckBox("Check", x.Value)</span>
+                        
                     }
                 }
-
             </div>
         </div>
         <div class="row">

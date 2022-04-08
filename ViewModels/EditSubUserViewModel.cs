@@ -7,7 +7,11 @@ namespace CMS_Demo.ViewModels
 {
     public class EditSubUserViewModel : AddSubUserViewModel
     {
+        public EditSubUserViewModel()
+        {
+            isActive = new Dictionary<int, bool>();
+        }
         public int UserId { get; set; }
-        public bool isSelected { get; set; }
+        public Dictionary<int,bool> isActive { get; set; }
     }
 }

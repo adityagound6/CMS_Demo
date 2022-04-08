@@ -247,6 +247,7 @@ namespace CMS_Demo.Controllers
         public IActionResult ManageSubUser()
         {
             var Users = _con.Users;
+
             return View(Users);
         }
 
@@ -265,6 +266,7 @@ namespace CMS_Demo.Controllers
             return false;
         }
 
+        [HttpGet]
         public IActionResult EditSubUser(int id)
         {
             Users User = _con.Users.Find(id);
@@ -274,7 +276,34 @@ namespace CMS_Demo.Controllers
                 Email = User.Email,
                 Password = User.Password
             };
-
+            var role = _con.UserRoles.Where(x => x.UserId == id).ToList();
+            if (role.Count != 0)
+            {
+                for (int i = 0; i < role.Count; i++)
+                {
+                    subUserViewModel.isActive.Add(role[i].Id, true);   
+                }
+                var roleNot = _con.AddRoles.ToList();
+                for (int j = 0; j < roleNot.Count; j++)
+                {
+                    if (subUserViewModel.isActive.ContainsKey(roleNot[j].RoleId))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        subUserViewModel.isActive.Add(roleNot[j].RoleId, false);
+                    }
+                }
+            }
+            else
+            {
+                var roleNot = _con.AddRoles.ToList();
+                for (int j = 0; j < roleNot.Count; j++)
+                {
+                    subUserViewModel.isActive.Add(roleNot[j].RoleId, false);
+                }
+            }
             return View(subUserViewModel);
         }
         [HttpPost]
@@ -286,13 +315,31 @@ namespace CMS_Demo.Controllers
                 return View(model);
             }
             UserRole role = new UserRole();
-            EditSubUserViewModel subUserViewModel = new EditSubUserViewModel
+            User.Email = model.Email;
+            User.Password = model.Password;
+            var checkuser = _con.UserRoles.Where(x => x.UserId == model.UserId).ToList();
+            foreach (var x in model.isActive)
             {
-                UserId = User.UserId,
-                Email = User.Email,
-                Password = User.Password
-            };
-            return View(subUserViewModel);
+               if(x.Value == true)
+               {
+                    if(checkuser.Count == 0)
+                    {
+                        role.UserId = model.UserId;
+                        role.RoleId = x.Key;
+                        _con.Add(role);
+                        _con.SaveChanges();
+                    }
+                    foreach(var y in checkuser)
+                    {
+                        if(x.Key == y.RoleId)
+                        {
+                            break;
+                        }
+                    }
+                    
+               }
+            }
+            return View();
         }
 
         //public async Task<IActionResult> IsEmailInUse(string email)
