@@ -276,12 +276,17 @@ namespace CMS_Demo.Controllers
                 Email = User.Email,
                 Password = User.Password
             };
+            var Addroleuser = _con.AddRoles.ToList();
+            for (int j = 0; j < Addroleuser.Count; j++)
+            {
+                subUserViewModel.AddRole.Add(Addroleuser[j].RoleId, Addroleuser[j].RoleName);
+            }
             var role = _con.UserRoles.Where(x => x.UserId == id).ToList();
             if (role.Count != 0)
             {
                 for (int i = 0; i < role.Count; i++)
                 {
-                    subUserViewModel.isActive.Add(role[i].Id, true);   
+                    subUserViewModel.isActive.Add(role[i].RoleId, true);   
                 }
                 var roleNot = _con.AddRoles.ToList();
                 for (int j = 0; j < roleNot.Count; j++)
@@ -314,23 +319,24 @@ namespace CMS_Demo.Controllers
             {
                 return View(model);
             }
-            UserRole role = new UserRole();
+            
             User.Email = model.Email;
             User.Password = model.Password;
             var checkuser = _con.UserRoles.Where(x => x.UserId == model.UserId).ToList();
             foreach(var userRol in checkuser)
             {
-                var us = _con.UserRoles.Find(userRol.RoleId);
+                var us = _con.UserRoles.Find(userRol.Id);
                 _con.UserRoles.Remove(us);
                 _con.SaveChanges();
             }
             foreach (var x in model.isActive)
             {
-               if(x.Value == true)
+                UserRole role = new UserRole();
+                if (x.Value == true)
                {
                     role.UserId = model.UserId;
                     role.RoleId = x.Key;
-                    _con.Add(role);
+                    _con.UserRoles.Add(role);
                     _con.SaveChanges();
                 }
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CMS_Demo.Models;
 
 namespace CMS_Demo.ViewModels
 {
@@ -10,8 +11,10 @@ namespace CMS_Demo.ViewModels
         public EditSubUserViewModel()
         {
             isActive = new Dictionary<int, bool>();
+            AddRole = new Dictionary<int, string>();
         }
         public int UserId { get; set; }
         public Dictionary<int,bool> isActive { get; set; }
+        public Dictionary<int,string> AddRole { get; set; }
     }
 }

@@ -40,15 +40,22 @@
         foreach (var list in Model.isActive)
         {
                 *@
-                @foreach (var x in Model.isActive)
+                @*@foreach (var x in Model.isActive)
                 {
                 <div class="col" style=" margin-left: 135px;" id="">
                     <input asp-for="@x.Value" class="form-check-input" />
                     <h5>@x.Key</h5>
                     <label asp-for="@x.Key" hidden></label>
                 </div>
-                }
+                }*@
 
+
+                @for(int i = 1; i <= Model.isActive.Count; i++)
+            {
+                    <h6>@Model.AddRole[i]</h6>
+                <span> @Html.CheckBoxFor(m => m.isActive[i]);</span>
+                
+            }
 
                 @*@{
                     foreach (var x in Model.isActive)
