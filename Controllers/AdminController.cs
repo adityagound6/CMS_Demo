@@ -268,11 +268,19 @@ namespace CMS_Demo.Controllers
         public IActionResult EditSubUser(int id)
         {
             Users User = _con.Users.Find(id);
+            /*ist<UserRole> role =  _con.UserRoles.Where(x => x.UserId == id).Select(new UserRole { 
+                RoleId,
+               
+            });*/
+            ViewBag.Roles = _con.AddRoles;
             EditSubUserViewModel subUserViewModel = new EditSubUserViewModel
             {
                 UserId = User.UserId,
                 Email = User.Email,
-                Password = User.Password
+                Password = User.Password,
+                //RoleId = role.RoleId,
+                
+                
             };
 
             return View(subUserViewModel);
@@ -280,32 +288,23 @@ namespace CMS_Demo.Controllers
         [HttpPost]
         public IActionResult EditSubUser(EditSubUserViewModel model)
         {
-            Users User = _con.Users.Find(model.UserId);
-            if(User == null)
-            {
-                return View(model);
-            }
-            UserRole role = new UserRole();
-            EditSubUserViewModel subUserViewModel = new EditSubUserViewModel
-            {
-                UserId = User.UserId,
-                Email = User.Email,
-                Password = User.Password
-            };
-            return View(subUserViewModel);
+            Users user = _con.Users.Find(model.UserId);
+            user.Email = model.Email;
+            user.Name  = model.Email;
+            user.UserName = model.Email;
+            user.Password = model.Password;
+
+          /*  UserRole userRole = _con.UserRoles.Find(model.UserId);
+
+            userRole.UserId = model.UserId;
+            userRole.RoleId = model.RoleId;*/
+
+           _con.Users.Update(user);
+           //_con.UserRoles.Update(userRole);
+            var status = _con.SaveChanges();
+
+            return RedirectToAction("EditSubUser");
         }
 
-        //public async Task<IActionResult> IsEmailInUse(string email)
-        //{
-        //    var result = await _con.Users.FindAsync(email);
-        //    if (result == null)
-        //    {
-        //        return Json(true);
-        //    }
-        //    else
-        //    {
-        //        return Json("Email is Already in use.");
-        //    }
-        //}
     }
 }

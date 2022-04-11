@@ -8,6 +8,7 @@ namespace CMS_Demo.ViewModels
     public class EditSubUserViewModel : AddSubUserViewModel
     {
         public int UserId { get; set; }
-        public bool isSelected { get; set; }
+        public int RoleId { get; set; }
+        public bool IsSelected { get; set; }
     }
 }

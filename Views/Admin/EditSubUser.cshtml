@@ -4,7 +4,7 @@
     ViewBag.Title = "Edit SubUser";
 }
 <div class="shadow-lg p-3 mb-5 bg-white rounded col-9">
-    <form class="card-body" asp-action="AddSubUser" asp-controller="Admin" method="post">
+    <form class="card-body" asp-action="EditSubUser" asp-controller="Admin" method="post">
         <div asp-validation-summary="All" class="text-danger"></div>
         <input type="hidden" asp-for="UserId" >
         <div class="form-group row mb-2">
@@ -36,17 +36,17 @@
             <br />
             <div class="form-group row ml-lg-2" style="display:none;" id="menu">
                 @{
-                    string[] MenuList = { "Menu", "Add SubMenu", "ManageMenu", "Add SubUser", "ManageSubUSer" };
-                    foreach (var list in MenuList)
+                    foreach (var role in ViewBag.Roles)
                     {
-                        <div class="col" style=" margin-left: 135px;" id="@list">
-                            <label class="switch ml-5" >
-                                <input type="checkbox" id="@list">
+                        <div class="col" style=" margin-left: 135px;" >
+                            <label class="switch ml-5">
+                                @*<input asp-for="RoleId" />*@
+                                <input type="checkbox" asp-for="IsSelected"  id="@role.RoleId">
                                 <span class="slider round"></span>
                             </label>
-                            <label class="col-form-label">@list</label>
+                            <label class="col-form-label">@role.RoleName</label>
 
-                        </div>  
+                        </div>
                     }
                 }
 
