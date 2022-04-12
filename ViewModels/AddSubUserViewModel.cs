@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace CMS_Demo.ViewModels
        
         [Required]
         [EmailAddress]
+        [Remote(action: "IsEmailInUsed", controller:"Admin")]
         public string Email { get; set; }
         public string Password { get; set; }
        

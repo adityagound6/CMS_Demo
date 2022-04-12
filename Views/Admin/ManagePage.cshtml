@@ -23,7 +23,7 @@
         <div class="form-group row">
             <label class="col-form-label">Page Name</label>
             <div class="col" id="pagename">
-                <input asp-for="PageName" class="form-control" />
+                <input asp-for="PageName" class="form-control" data-val="false" />
                 <span asp-validation-for="PageName" class="text-danger"></span>
             </div>
         </div>
@@ -66,41 +66,7 @@
         function GetData() {
             window.location.replace("/Admin/ManagePage/"+ $('#pageid').val())
         }
+        
     </script>
 
-    @* <script>
-            $("#pageid").change(function () {
-                GetData($("#pageid").val());
-            });
-            function GetData(id) {
-                $.ajax({
-                    url: '/Admin/Getdata/' + id,
-                    type: 'Post',
-                    data: {
-                    },
-                    success: function (data) {
-                        //$('#pagename').find('input').remove()
-                        //$('#pagename').append(' <input asp-for="PageName" class="form-control" id="pagename" value='+data.pageName+'/>')
-
-                        $('#description').find('div').remove()
-                        $('#description').append(' <div class="col" id="description"><textarea id="froala-editor" asp-for="Description">' +
-                            data.description + '</textarea></div>')
-                        new FroalaEditor('textarea#froala-editor')
-
-                        $('#pageStatus').find('input').remove()
-                        $('#pageStatus').find('span').remove()
-                      /*  $('#pageStatus').append('<input asp-for="pageid" hidden>')*/
-                        if (data.status == true) {
-                            $('#pageStatus').append(' <input type = "checkbox" asp-for="Status" checked><span class="slider round"></span>')
-                        } else {
-                            $('#pageStatus').append(' <input type = "checkbox" asp-for="Status"><span class="slider round"></span>')
-                        }
-                    },
-                    error: function () {
-                    }
-                });
-            }
-
-            new FroalaEditor('textarea#froala-editor')
-        </script>*@
 }

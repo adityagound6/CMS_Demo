@@ -24,7 +24,7 @@
                         <td>@count</td>
                         <td>@User.Email</td>
                         <td><a  class="btn btn-warning" asp-controller="admin" asp-action="EditSubUser" asp-route-id="@User.UserId">Edit</a></td>
-                        <td><button type="button" class="btn btn-danger"  onclick="DeleteUser(@User.UserId)" >Delete</button></td>
+                        <td><button type="button" class="btn btn-danger"  onclick="DeleteUser(@User.UserId, '@User.Email')" >Delete</button></td>
                     </tr>
                 }
             }
@@ -35,7 +35,7 @@
 @section Scripts{
 <script>
     function DeleteUser(id, name) {
-        if (confirm("Are You Sure To Delete This User:" + name) == true) {
+        if (confirm("Are You Sure To Delete This User: " + name) == true) {
             DeleteUserMethodCall(id);
         }
     }

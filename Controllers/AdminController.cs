@@ -1,9 +1,7 @@
 ﻿using CMS_Demo.Models;
 using CMS_Demo.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -11,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace CMS_Demo.Controllers
 {
+    
     public class AdminController : Controller
     {
         private readonly AppDbContext _con;
@@ -18,7 +17,23 @@ namespace CMS_Demo.Controllers
         public AdminController(AppDbContext con)
         {
             _con = con;
+            
+
         }
+
+        public IList<AddRole> RolesData()
+        {
+
+            string username = HttpContext.Session.GetString("UserName");
+            var user = _con.Users.Where(x => x.UserName == username).FirstOrDefault();
+            var userRole = from UR in _con.UserRoles.Where(x => x.UserId == user.UserId)
+                           join AR in _con.AddRoles
+                           on UR.RoleId equals AR.RoleId
+                           select new
+                           { RoleName = AR.RoleName };
+            return (IList<AddRole>)userRole;
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -43,11 +58,21 @@ namespace CMS_Demo.Controllers
                 }
                 HttpContext.Session.SetString("UserName", user.UserName);
                 ViewBag.Session = HttpContext.Session.GetString("UserName");
+
+                HttpContext.Session.SetInt32("Permission", user.Permission);
+                ViewBag.Permission = HttpContext.Session.GetInt32("Permission");
+
+               /* var userRole = from UR in _con.UserRoles.Where(x => x.UserId == user.UserId)
+                               join AR in _con.AddRoles
+                               on UR.RoleId equals AR.RoleId
+                               select new AddRole
+                               { RoleName = AR.RoleName };*/
+
                 return RedirectToAction("index");
             }
             catch(DbException)
             {
-                return View("Login");
+                return RedirectToAction("Login");
             }
         }
         [HttpGet]
@@ -65,7 +90,8 @@ namespace CMS_Demo.Controllers
                     Email = model.Email,
                     UserName = model.Email,
                     Name = model.Name,
-                    Password = model.Password
+                    Password = model.Password,
+                    Permission = 0
                 };
                 _con.Users.Add(user);
                 var status = _con.SaveChanges();
@@ -90,6 +116,7 @@ namespace CMS_Demo.Controllers
         [HttpGet]
         public IActionResult AddPage()
         {
+          
             return View();
         }
         [HttpPost]
@@ -119,6 +146,7 @@ namespace CMS_Demo.Controllers
         public IActionResult AddSubPage()
         {
             ViewBag.PageList = PageList();
+           //ViewBag.userRoles = RolesData();
             return View();
         }
         [HttpPost]
@@ -141,6 +169,7 @@ namespace CMS_Demo.Controllers
                     return RedirectToAction("AddSubPage");
                 }
             }
+
             return View(model);
         }
 
@@ -155,30 +184,14 @@ namespace CMS_Demo.Controllers
         [Route("Admin/ManagePage")]
         public IActionResult ManagePage()
         {
-            /*if (id != null)
-            {
-                AddPage data = _con.AddPages.Find(id);
-                if(data != null)
-                {
-                    ManagePageViewModel managePageView = new ManagePageViewModel
-                    {
-                        PageId = data.PageId,
-                        PageName = data.PageName,
-                        Description = data.Description,
-                        Status = data.Status
-                    };
-                    ViewBag.PageList = PageList();
-                    return View(managePageView);
-                }
-            }*/
-            ViewBag.PageList = PageList();
+             ViewBag.PageList = PageList();
+            //ViewBag.userRoles = RolesData();
             return View();
         }
 
         [Route("Admin/ManagePage/{id}")]
         public IActionResult ManagePage(int id)
         {
-
             AddPage data = _con.AddPages.Find(id);
             if (data != null)
             {
@@ -219,9 +232,11 @@ namespace CMS_Demo.Controllers
         [HttpGet]
         public IActionResult AddSubUser()
         {
+           // ViewBag.userRoles = RolesData();
             return View();
         }
         [HttpPost]
+        
         public IActionResult AddSubUser(AddSubUserViewModel model)
         {
             if (ModelState.IsValid)
@@ -231,7 +246,8 @@ namespace CMS_Demo.Controllers
                     Email = model.Email,
                     UserName = model.Email,
                     Name = model.Email,
-                    Password = model.Password
+                    Password = model.Password,
+                    Permission = 0
                 };
                 _con.Users.Add(user);
                 var status = _con.SaveChanges();
@@ -247,6 +263,7 @@ namespace CMS_Demo.Controllers
         public IActionResult ManageSubUser()
         {
             var Users = _con.Users;
+
             return View(Users);
         }
 
@@ -265,6 +282,7 @@ namespace CMS_Demo.Controllers
             return false;
         }
 
+        [HttpGet]
         public IActionResult EditSubUser(int id)
         {
             Users User = _con.Users.Find(id);
@@ -282,28 +300,112 @@ namespace CMS_Demo.Controllers
                 
                 
             };
-
+            var Addroleuser = _con.AddRoles.ToList();
+            for (int j = 0; j < Addroleuser.Count; j++)
+            {
+                subUserViewModel.AddRole.Add(Addroleuser[j].RoleId, Addroleuser[j].RoleName);
+            }
+            var role = _con.UserRoles.Where(x => x.UserId == id).ToList();
+            if (role.Count != 0)
+            {
+                for (int i = 0; i < role.Count; i++)
+                {
+                    subUserViewModel.isActive.Add(role[i].RoleId, true);   
+                }
+                var roleNot = _con.AddRoles.ToList();
+                for (int j = 0; j < roleNot.Count; j++)
+                {
+                    if (subUserViewModel.isActive.ContainsKey(roleNot[j].RoleId))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        subUserViewModel.isActive.Add(roleNot[j].RoleId, false);
+                    }
+                }
+            }
+            else
+            {
+                var roleNot = _con.AddRoles.ToList();
+                for (int j = 0; j < roleNot.Count; j++)
+                {
+                    subUserViewModel.isActive.Add(roleNot[j].RoleId, false);
+                }
+            }
             return View(subUserViewModel);
         }
         [HttpPost]
         public IActionResult EditSubUser(EditSubUserViewModel model)
         {
-            Users user = _con.Users.Find(model.UserId);
-            user.Email = model.Email;
-            user.Name  = model.Email;
-            user.UserName = model.Email;
-            user.Password = model.Password;
+            Users User = _con.Users.Find(model.UserId);
+            if(User == null)
+            {
+                return View(model);
+            }
+            
+            User.Email = model.Email;
+            User.Password = model.Password;
+            var checkuser = _con.UserRoles.Where(x => x.UserId == model.UserId).ToList();
+            foreach(var userRol in checkuser)
+            {
+                var us = _con.UserRoles.Find(userRol.Id);
+                _con.UserRoles.Remove(us);
+                _con.SaveChanges();
+            }
+            var count = 0;
+            foreach (var x in model.isActive)
+            {
+                UserRole role = new UserRole();
+               
+                if (x.Value == true)
+               {
+                    count++;
+                    role.UserId = model.UserId;
+                    role.RoleId = x.Key;
+                    _con.UserRoles.Add(role);
+                    _con.SaveChanges();
+                   
+                }
+            }
+            if (count == 5)
+            {
+                User.Permission = 1;
+            }
+            else
+            {
+                User.Permission = 0;
+            }
+            _con.Users.Update(User);
+            _con.SaveChanges();
+            return RedirectToAction("index");
+        }
 
-          /*  UserRole userRole = _con.UserRoles.Find(model.UserId);
 
-            userRole.UserId = model.UserId;
-            userRole.RoleId = model.RoleId;*/
+        [AcceptVerbs("Get","Post")]
+        public JsonResult IsEmailInUsed(string email)
+        {
+            var user = _con.Users.Where(x => x.Email == email).FirstOrDefault();
+            if (user == null) {
+                return Json(true);
+             }
+            else {
+                return Json("This Email Is already in Used.");
+            }
+        }
 
-           _con.Users.Update(user);
-           //_con.UserRoles.Update(userRole);
-            var status = _con.SaveChanges();
-
-            return RedirectToAction("EditSubUser");
+        [AcceptVerbs("Get", "Post")]
+        public JsonResult IsPageInUsed(string pagename)
+        {
+            var page = _con.AddPages.Where(x => x.PageName == pagename).FirstOrDefault();
+            if (page == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(pagename + " Page Is already Exist.");
+            }
         }
 
     }
