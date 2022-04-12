@@ -14,6 +14,7 @@ namespace CMS_Demo.ViewModels
         //[Remote(action: "IsEmailInUse", controller: "Admin")]
         [Required]
         [EmailAddress]
+        [Remote(action: "IsEmailInUsed", controller: "Admin")]
         public string Email { get; set; }
         [DataType(DataType.Password)]
         public string Password { get; set; }

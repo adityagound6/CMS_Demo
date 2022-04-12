@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿@*@model IEnumerable<AddRoles>*@
+<!doctype html>
 <html lang="en">
 <head>
     <!-- Required meta tags -->
@@ -13,9 +14,9 @@
 </head>
 <body>
     <!--Nav Bar Or Header-->
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #576868">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow fixed-top" style="background-color: #576868">
         <div class="container">
-            <a class="navbar-brand" asp-controller="admin" asp-action="index">Welcome To CMS_Demo</a>
+            <a class="navbar-brand text-white-50" asp-controller="admin" asp-action="index">Welcome To CMS_Demo</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -43,53 +44,64 @@
             </div>
         </div>
     </nav>
-        @if (Context.Session.GetString("UserName") != null)
-        {
-            @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #576868">*@
-<div class="sidebar">
-    @if (Context.Session.GetString("UserName") != "yugal@gmail.com")
+    @if (Context.Session.GetString("UserName") != null)
     {
-        <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
-            Menu
-        </a>
-        <a asp-controller="Admin" asp-action="addsubpage" class="list-group-item">
-            Add SubMenu
-        </a>
-        <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
-            Manage Menu
-        </a>
-    }
-    else
-    {
-        <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
-            Menu
-        </a>
-        <a asp-controller="Admin" asp-action="addsubpage" class="list-group-item">
-            Add SubMenu
-        </a>
-        <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
-            Manage Menu
-        </a>
-        <a asp-controller="Admin" asp-action="AddSubUser" asp-route-id="" class="list-group-item">
-            Add Sub User
-        </a>
-        <a asp-controller="Admin" asp-action="ManageSubUser" asp-route-id="" class="list-group-item">
-            Manage Sub User
-        </a>
-    }
-</div>
+        @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #576868">*@
+        <div class="sidebar">
+            @{
+                var permission = Context.Session.GetInt32("Permission");
+                if (permission != null)
+                {
+                    if (permission == 1)
+                    {
+                        <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
+                            Menu
+                        </a>
+                        <a asp-controller="Admin" asp-action="addsubpage" class="list-group-item">
+                            Add SubMenu
+                        </a>
+                        <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
+                            Manage Menu
+                        </a>
+                        <a asp-controller="Admin" asp-action="addsubuser" class="list-group-item">
+                            Add SubUser
+                        </a>
+                        <a asp-controller="Admin" asp-action="managesubuser" asp-route-id="" class="list-group-item">
+                            Manage SubUser
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
+                            Menu
+                        </a>
+                        <a asp-controller="Admin" asp-action="addsubpage" class="list-group-item">
+                            Add SubMenu
+                        </a>
+                        <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
+                            Manage Menu
+                        </a>
+                    }
+                }
 
-        }
+            }
+            }
 
-        <div class="content">
-            <!--Body-->
-            @RenderBody()
         </div>
+
+    }
+
+    <div class="content mt-5">
+        <!--Body-->
+        @RenderBody()
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
     <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>

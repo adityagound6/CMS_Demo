@@ -6,7 +6,7 @@
 <div class="shadow-lg p-3 mb-5 bg-white rounded col-9">
     <form class="card-body" asp-action="EditSubUser" asp-controller="Admin" method="post">
         <div asp-validation-summary="All" class="text-danger"></div>
-        <input type="hidden" asp-for="UserId" >
+        <input type="hidden" asp-for="UserId">
         <div class="form-group row mb-2">
             <label asp-for="Email" class="col-sm-3 col-form-label">Email</label>
             <div class="col-sm-9">
@@ -35,34 +35,22 @@
             <br />
             <br />
             <div class="form-group row ml-lg-2" style="display:none;" id="menu">
-                @*@{
-        string[] MenuList = { "Menu", "Add SubMenu", "ManageMenu", "Add SubUser", "ManageSubUSer" };
-        foreach (var list in Model.isActive)
-        {
-                *@
-                @*@foreach (var x in Model.isActive)
-                {
-                <div class="col" style=" margin-left: 135px;" id="">
-                    <input asp-for="@x.Value" class="form-check-input" />
-                    <h5>@x.Key</h5>
-                    <label asp-for="@x.Key" hidden></label>
-                </div>
-                }*@
 
-
-                @for(int i = 1; i <= Model.isActive.Count; i++)
-            {
-                    <h6>@Model.AddRole[i]</h6>
-                <span> @Html.CheckBoxFor(m => m.isActive[i]);</span>
-                
-            }
-
-                @*@{
-                    foreach (var x in Model.isActive)
+                @{
+                    @for (int i = 1; i <= Model.isActive.Count; i++)
                     {
-                        <span> @Html.CheckBox("Check", x.Value)</span>
+                        <div class="col" style=" margin-left: 135px;">
+                            <label class="switch ml-5">
+                                @*<input asp-for="RoleId" />*@
+                                @Html.CheckBoxFor(m => m.isActive[i])
+
+                                <span class="slider round"></span>
+                            </label>
+                            <label class="col-form-label">@Model.AddRole[i]</label>
+
+                        </div>
                     }
-                }*@
+                }
             </div>
         </div>
         <div class="row">
@@ -85,7 +73,7 @@
                 else {
                     document.getElementById("menu").style.display = "block";
                 }
-            } 
+            }
         }
     </script>
 }
