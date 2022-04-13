@@ -63,8 +63,6 @@ namespace CMS_Demo.Controllers
                         var userRolesId = userRoles[i];
                         HttpContext.Session.SetInt32($"Permission{userRolesId}", userRolesId);
                     }
-                   
-
                 }
                 var claims = new List<Claim>
                                  {
@@ -91,7 +89,7 @@ namespace CMS_Demo.Controllers
                     // value set here overrides the ExpireTimeSpan option of 
                     // CookieAuthenticationOptions set with AddCookie.
 
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(2),
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1),
 
                 };
 
@@ -144,7 +142,7 @@ namespace CMS_Demo.Controllers
         public IActionResult LogOut()
         {
             HttpContext.Session.Clear();
-
+            HttpContext.SignOutAsync();
             return RedirectToAction("Login");
         }
 
