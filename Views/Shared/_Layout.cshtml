@@ -37,7 +37,7 @@
                     else
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-action="Logout" asp-controller="Admin">LogOut @Context.Session.GetString("UserName")</a>
+                            <a class="nav-link text-white" asp-action="Logout" asp-controller="Admin">@Context.Session.GetString("UserName") Logout </a>
                         </li>
                     }
                 </ul>
@@ -72,9 +72,9 @@
             }
             else
             {
-                for (var i = 1; i < 6; i++)
+                for (var i = 1; i <= 5; i++)
                 {
-                    var name = Context.Session.GetInt32("Permission" + i);
+                    var name = Context.Session.GetInt32($"Permission{i}");
                     if (name == 1)
                     {
                         <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
