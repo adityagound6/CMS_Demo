@@ -36,10 +36,10 @@ namespace CMS_Demo
 
             services.AddMvc(options => {
                 options.EnableEndpointRouting = false;
-                var policy = new AuthorizationPolicyBuilder()
+                /*var policy = new AuthorizationPolicyBuilder()
                   .RequireAuthenticatedUser()
                   .Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
+                options.Filters.Add(new AuthorizeFilter(policy));*/
             });
 
         }
