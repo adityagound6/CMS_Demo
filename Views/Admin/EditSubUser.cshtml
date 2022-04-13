@@ -8,9 +8,9 @@
         <div asp-validation-summary="All" class="text-danger"></div>
         <input type="hidden" asp-for="UserId">
         <div class="form-group row mb-2">
-            <label asp-for="Email" class="col-sm-3 col-form-label">Email</label>
+            <label asp-for="Email" class="col-sm-3 col-form-label" >Email</label>
             <div class="col-sm-9">
-                <input asp-for="Email" class="form-control" placeholder="Email">
+                <input asp-for="Email" class="form-control" data-val="false" placeholder="Email">
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
         </div>

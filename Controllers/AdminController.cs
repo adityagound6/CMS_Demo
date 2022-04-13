@@ -1,5 +1,6 @@
 ﻿using CMS_Demo.Models;
 using CMS_Demo.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -9,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace CMS_Demo.Controllers
 {
-    
     public class AdminController : Controller
     {
         private readonly AppDbContext _con;
@@ -17,21 +17,17 @@ namespace CMS_Demo.Controllers
         public AdminController(AppDbContext con)
         {
             _con = con;
-            
-
+           
         }
 
-        public IList<AddRole> RolesData()
+      private bool Redirect()
         {
-
-            string username = HttpContext.Session.GetString("UserName");
-            var user = _con.Users.Where(x => x.UserName == username).FirstOrDefault();
-            var userRole = from UR in _con.UserRoles.Where(x => x.UserId == user.UserId)
-                           join AR in _con.AddRoles
-                           on UR.RoleId equals AR.RoleId
-                           select new
-                           { RoleName = AR.RoleName };
-            return (IList<AddRole>)userRole;
+            string user = HttpContext.Session.GetString("UserName");
+            if(user == null)
+            {
+                 RedirectToAction("Login");
+            }
+            return false;
         }
 
         [HttpGet]
@@ -39,7 +35,10 @@ namespace CMS_Demo.Controllers
         {
             return View();
         }
+
         #region "Login,register and logout"
+
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login()
         {
@@ -62,6 +61,15 @@ namespace CMS_Demo.Controllers
                 HttpContext.Session.SetInt32("Permission", user.Permission);
                 ViewBag.Permission = HttpContext.Session.GetInt32("Permission");
 
+                if (user.Permission != 1)
+                {
+                    var menuPermission = _con.UserRoles.Where(x => x.UserId == user.UserId);
+                    for (var i = 1; i <= menuPermission.Count(); i++)
+                    {
+                        HttpContext.Session.SetInt32("Permission" + i, user.Permission);
+                    }
+              }
+                
                /* var userRole = from UR in _con.UserRoles.Where(x => x.UserId == user.UserId)
                                join AR in _con.AddRoles
                                on UR.RoleId equals AR.RoleId
@@ -75,6 +83,8 @@ namespace CMS_Demo.Controllers
                 return RedirectToAction("Login");
             }
         }
+
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Register()
         {
@@ -105,6 +115,8 @@ namespace CMS_Demo.Controllers
             }
             return View();
         }
+
+        [AllowAnonymous]
         public IActionResult LogOut()
         {
             HttpContext.Session.Clear();
@@ -113,10 +125,13 @@ namespace CMS_Demo.Controllers
 
         #endregion
 
+        #region `Side MenuBar Items: AddPage, Add Subpage, Manage Page,  Add User, Manage SubUser, Delete User, Edit SubUser`
+
+      
         [HttpGet]
         public IActionResult AddPage()
         {
-          
+           
             return View();
         }
         [HttpPost]
@@ -173,14 +188,6 @@ namespace CMS_Demo.Controllers
             return View(model);
         }
 
-        public IList<AddPage> PageList()
-        {
-            List<AddPage> PageList = new List<AddPage>();
-            PageList = _con.AddPages.ToList();
-            return PageList;
-        }
-        
-
         [Route("Admin/ManagePage")]
         public IActionResult ManagePage()
         {
@@ -222,12 +229,6 @@ namespace CMS_Demo.Controllers
             
         }
 
-        [HttpPost]
-        public JsonResult GetData(int id)
-        {
-            var data = _con.AddPages.Find(id);
-            return Json(data);
-        }
 
         [HttpGet]
         public IActionResult AddSubUser()
@@ -235,8 +236,8 @@ namespace CMS_Demo.Controllers
            // ViewBag.userRoles = RolesData();
             return View();
         }
+
         [HttpPost]
-        
         public IActionResult AddSubUser(AddSubUserViewModel model)
         {
             if (ModelState.IsValid)
@@ -381,6 +382,25 @@ namespace CMS_Demo.Controllers
             return RedirectToAction("index");
         }
 
+        #endregion
+
+        #region "Get data of Pages"
+        [HttpPost]
+        public JsonResult GetData(int id)
+        {
+            var data = _con.AddPages.Find(id);
+            return Json(data);
+        }
+        public IList<AddPage> PageList()
+        {
+            List<AddPage> PageList = new List<AddPage>();
+            PageList = _con.AddPages.ToList();
+            return PageList;
+        }
+
+        #endregion
+
+        #region "Remote Validation for Email and Page"
 
         [AcceptVerbs("Get","Post")]
         public JsonResult IsEmailInUsed(string email)
@@ -408,5 +428,6 @@ namespace CMS_Demo.Controllers
             }
         }
 
+        #endregion
     }
 }

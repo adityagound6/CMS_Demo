@@ -1,5 +1,6 @@
 using CMS_Demo.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -25,12 +26,18 @@ namespace CMS_Demo
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(x => x.LoginPath = "/Login");
+                    
+            services.AddAuthorization();
             services.AddDbContextPool<AppDbContext>(option =>
-            option.UseSqlServer(_config.GetConnectionString("DBConnection")));
+                    option.UseSqlServer(_config.GetConnectionString("DBConnection")));
             services.AddDistributedMemoryCache();
             services.AddSession();
-            /*services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-     .AddCookie(options => options.Cookie = cookiePolicyOptions);*/
+            /*services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Admin/Login";
+            });*/
             services.AddMvc(options => options.EnableEndpointRouting = false);
             
         }
@@ -45,6 +52,7 @@ namespace CMS_Demo
             app.UseStaticFiles();
             app.UseSession();
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseRouting();
            // app.UseCookiePolicy(cookiePolicyOptions);
             app.UseMvc(route => {
