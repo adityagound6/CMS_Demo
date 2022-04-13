@@ -1,15 +1,20 @@
 ﻿using CMS_Demo.Models;
 using CMS_Demo.ViewModels;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CMS_Demo.Controllers
 {
-    
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly AppDbContext _con;
@@ -17,21 +22,6 @@ namespace CMS_Demo.Controllers
         public AdminController(AppDbContext con)
         {
             _con = con;
-            
-
-        }
-
-        public IList<AddRole> RolesData()
-        {
-
-            string username = HttpContext.Session.GetString("UserName");
-            var user = _con.Users.Where(x => x.UserName == username).FirstOrDefault();
-            var userRole = from UR in _con.UserRoles.Where(x => x.UserId == user.UserId)
-                           join AR in _con.AddRoles
-                           on UR.RoleId equals AR.RoleId
-                           select new
-                           { RoleName = AR.RoleName };
-            return (IList<AddRole>)userRole;
         }
 
         [HttpGet]
@@ -39,14 +29,17 @@ namespace CMS_Demo.Controllers
         {
             return View();
         }
+
         #region "Login,register and logout"
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
+        [AllowAnonymous]
         [HttpPost]
-        public IActionResult Login(string Email, string Password)
+        public IActionResult Login(string Email, string Password, string returnUrl)
         {
             try
             {
@@ -70,13 +63,46 @@ namespace CMS_Demo.Controllers
                         var userRolesId = userRoles[i];
                         HttpContext.Session.SetInt32($"Permission{userRolesId}", userRolesId);
                     }
-                }
-               /* var userRole = from UR in _con.UserRoles.Where(x => x.UserId == user.UserId)
-                               join AR in _con.AddRoles
-                               on UR.RoleId equals AR.RoleId
-                               select new AddRole
-                               { RoleName = AR.RoleName };*/
+                   
 
+                }
+                var claims = new List<Claim>
+                                 {
+                                     new Claim("UserId",user.UserId.ToString()),
+                                     new Claim("Username",user.UserName),
+                                     new Claim("Name",user.Name),
+                                     new Claim("Email", user.Email),
+                                 };
+
+                var claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var authProperties = new AuthenticationProperties
+                {
+
+                    // Whether the authentication session is persisted across 
+                    // multiple requests. When used with cookies, controls
+                    // whether the cookie's lifetime is absolute (matching the
+                    // lifetime of the authentication ticket) or session-based.
+
+                    IsPersistent = true,
+
+                    // The time at which the authentication ticket expires. A 
+                    // value set here overrides the ExpireTimeSpan option of 
+                    // CookieAuthenticationOptions set with AddCookie.
+
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(2),
+
+                };
+
+                HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
+                if (returnUrl != null)
+                {
+                    return Redirect(returnUrl);
+                }
                 return RedirectToAction("index");
             }
             catch(DbException)
@@ -114,18 +140,24 @@ namespace CMS_Demo.Controllers
             }
             return View();
         }
+        [AllowAnonymous]
         public IActionResult LogOut()
         {
             HttpContext.Session.Clear();
+
             return RedirectToAction("Login");
         }
 
         #endregion
 
+        #region "Admin Panel Methods"
         [HttpGet]
         public IActionResult AddPage()
         {
-          
+            /*if (HttpContext.Session.GetString("Permission") == null)
+            {
+                return Redirect("Login?returnUrl=/Admin/Addpage");
+            }*/
             return View();
         }
         [HttpPost]
@@ -154,6 +186,10 @@ namespace CMS_Demo.Controllers
         [HttpGet]
         public IActionResult AddSubPage()
         {
+            /*if (HttpContext.Session.GetString("Permission") == null)
+            {
+                return Redirect("Login?returnUrl=/Admin/AddSubPage");
+            }*/
             ViewBag.PageList = PageList();
            //ViewBag.userRoles = RolesData();
             return View();
@@ -193,7 +229,11 @@ namespace CMS_Demo.Controllers
         [Route("Admin/ManagePage")]
         public IActionResult ManagePage()
         {
-             ViewBag.PageList = PageList();
+            /*if (HttpContext.Session.GetString("Permission") == null)
+            {
+                return Redirect("Login?returnUrl=/Admin/ManagePage");
+            }*/
+            ViewBag.PageList = PageList();
             //ViewBag.userRoles = RolesData();
             return View();
         }
@@ -201,6 +241,10 @@ namespace CMS_Demo.Controllers
         [Route("Admin/ManagePage/{id}")]
         public IActionResult ManagePage(int id)
         {
+            /*if (HttpContext.Session.GetString("Permission") == null)
+            {
+                return Redirect("Login?returnUrl=/Admin/ManagePage/"+id);
+            }*/
             AddPage data = _con.AddPages.Find(id);
             if (data != null)
             {
@@ -241,7 +285,11 @@ namespace CMS_Demo.Controllers
         [HttpGet]
         public IActionResult AddSubUser()
         {
-           // ViewBag.userRoles = RolesData();
+            /*if (HttpContext.Session.GetString("Permission") == null)
+            {
+                return Redirect("Login?returnUrl=/Admin/AdSubUser/");
+            }*/
+            // ViewBag.userRoles = RolesData();
             return View();
         }
         [HttpPost]
@@ -269,8 +317,13 @@ namespace CMS_Demo.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult ManageSubUser()
         {
+           /* if (HttpContext.Session.GetString("Permission") == null)
+            {
+                return Redirect("Login?returnUrl=/Admin/ManageSubUser/");
+            }*/
             var Users = _con.Users;
 
             return View(Users);
@@ -278,6 +331,7 @@ namespace CMS_Demo.Controllers
 
         public bool DeleteSubUser(int id)
         {
+           
             var User = _con.Users.Find(id);
             if(User != null)
             {
@@ -294,6 +348,10 @@ namespace CMS_Demo.Controllers
         [HttpGet]
         public IActionResult EditSubUser(int id)
         {
+            if (HttpContext.Session.GetString("Permission") == null)
+            {
+                return Redirect("Login?returnUrl=/Admin/EditSubUser/" + id);
+            }
             Users User = _con.Users.Find(id);
             EditSubUserViewModel subUserViewModel = new EditSubUserViewModel
             {
@@ -381,8 +439,9 @@ namespace CMS_Demo.Controllers
             _con.SaveChanges();
             return RedirectToAction("index");
         }
+        #endregion
 
-
+        #region "Remote Validation"
         [AcceptVerbs("Get","Post")]
         public JsonResult IsEmailInUsed(string email)
         {
@@ -408,6 +467,6 @@ namespace CMS_Demo.Controllers
                 return Json(pagename + " Page Is already Exist.");
             }
         }
-
+        #endregion
     }
 }
