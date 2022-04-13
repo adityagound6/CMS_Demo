@@ -1,9 +1,10 @@
 using CMS_Demo.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,23 +24,24 @@ namespace CMS_Demo
             this._config = _config;
         }
         public IConfiguration Configuration { get; }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                    .AddCookie(x => x.LoginPath = "/Login");
-                    
-            services.AddAuthorization();
             services.AddDbContextPool<AppDbContext>(option =>
-                    option.UseSqlServer(_config.GetConnectionString("DBConnection")));
-            services.AddDistributedMemoryCache();
+            option.UseSqlServer(_config.GetConnectionString("DBConnection")));
+            //services.AddDistributedMemoryCache();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(options => options.LoginPath = new PathString("/Admin/Login"));
             services.AddSession();
-            /*services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = "/Admin/Login";
-            });*/
-            services.AddMvc(options => options.EnableEndpointRouting = false);
-            
+
+            services.AddMvc(options => {
+                options.EnableEndpointRouting = false;
+                var policy = new AuthorizationPolicyBuilder()
+                  .RequireAuthenticatedUser()
+                  .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,10 +52,10 @@ namespace CMS_Demo
                 app.UseDeveloperExceptionPage();
             }
             app.UseStaticFiles();
-            app.UseSession();
+           // app.UseRouting();
             app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseRouting();
+            //app.UseAuthorization();
+            app.UseSession();
            // app.UseCookiePolicy(cookiePolicyOptions);
             app.UseMvc(route => {
                 route.MapRoute("default", "{controller=Home}/{action=index}/{id?}");
