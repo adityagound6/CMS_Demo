@@ -63,10 +63,10 @@ namespace CMS_Demo.Controllers
 
                 if (user.Permission != 1)
                 {
-                    var menuPermission = _con.UserRoles.Where(x => x.UserId == user.UserId);
-                    for (var i = 1; i <= menuPermission.Count(); i++)
+                    var menuPermission = _con.UserRoles.Where(x => x.UserId == user.UserId).ToList();
+                    for (var i = 0; i < menuPermission.Count(); i++)
                     {
-                        HttpContext.Session.SetInt32("Permission" + i, user.Permission);
+                        HttpContext.Session.SetInt32($"Permission{i}" , menuPermission[i].RoleId);
                     }
               }
                 
