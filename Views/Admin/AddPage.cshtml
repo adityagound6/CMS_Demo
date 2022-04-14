@@ -1,28 +1,30 @@
 ﻿@model AddPageViewModel
 
 @{
-    ViewBag.Title = "Add Page";
+    ViewBag.Title = "Menu";
 }
 <div class="shadow-lg p-3 mb-5 bg-white rounded col-9" >
     <form class="card-body " method="post">
-        <h3 class="text-center">Add Page</h3>
+        <h3 class="text-center">@ViewBag.Title</h3>
         <hr />
         <div class="form-group row">
-            <label asp-for="PageName" class="col-form-label"></label>
+            <label asp-for="PageName" class="col-form-label fw-bolder"></label>
             <div class="col">
-                <input asp-for="PageName" class="form-control" />
+                <input asp-for="PageName" class="form-control" style="text-transform: capitalize;" />
                 <span asp-validation-for="PageName" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row">
-            <label asp-for="Description" class="col-form-label"></label>
+            <label asp-for="Description" class="col-form-label fw-bolder"></label>
             <div class="col">
                 <textarea asp-for="Description" id="froala-editor"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
         </div>
-        <div class="form-group row justify-content-center mt-3">
-            <input class="btn btn-outline-success" style="width:55%" type="submit" value="Add Page" />
+        <div class="form-group row my-3">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-success" >Add Page</button>
+            </div>
         </div>
     </form>
 </div>

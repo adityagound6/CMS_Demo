@@ -36,7 +36,16 @@ namespace CMS_Demo.Controllers
             var data = _con.AddPages.Find(id ?? 1);
             ViewBag.PageName = data.PageName;
             ViewBag.Description = data.Description;
-           
+
+            var Logo = _con.Images.Find(1).ImagePath;
+            ViewBag.Logo = Logo;
+
+            var Footer = _con.Footers.Find(1);
+            if(Footer != null)
+            {
+                ViewBag.Footer = Footer.FooterData;
+            }
+
             return View(nav_List);
         }
     }

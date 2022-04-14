@@ -19,7 +19,7 @@ namespace CMS_Demo.ViewModels
         [DataType(DataType.Password)]
         public string Password { get; set; }
         [DataType(DataType.Password)]
-        [Compare("Password",ErrorMessage ="password and confirm password must be match")]
+        [Compare("Password",ErrorMessage ="Password and Confirm Password must be match.")]
         public string ConfirmPassword { get; set; }
         [Required]
         public string Name { get; set; }

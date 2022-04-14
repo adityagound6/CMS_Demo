@@ -1,14 +1,15 @@
 ﻿@model EditSubUserViewModel;
 
 @{
-    ViewBag.Title = "Edit SubUser";
+    ViewBag.Title = "Edit Sub User";
 }
 <div class="shadow-lg p-3 mb-5 bg-white rounded col-9">
     <form class="card-body" asp-action="EditSubUser" asp-controller="Admin" method="post">
-        <div asp-validation-summary="All" class="text-danger"></div>
+        <h3 class="text-center">@ViewBag.Title</h3>
+        <hr />
         <input type="hidden" asp-for="UserId">
         <div class="form-group row mb-2">
-            <label asp-for="Email" class="col-sm-3 col-form-label" >Email</label>
+            <label asp-for="Email" class="col-sm-3 col-form-label fw-bolder">Email</label>
             <div class="col-sm-9">
                 <input asp-for="Email" class="form-control" data-val="false" placeholder="Email">
                 <span asp-validation-for="Email" class="text-danger"></span>
@@ -16,7 +17,7 @@
         </div>
 
         <div class="form-group row mb-2">
-            <label asp-for="Password" class="col-sm-3 col-form-label">Password</label>
+            <label asp-for="Password" class="col-sm-3 col-form-label fw-bolder">Password</label>
             <div class="col-sm-9">
                 <input asp-for="Password" class="form-control" placeholder="Password">
                 <span asp-validation-for="Password" class="text-danger"></span>
@@ -26,7 +27,7 @@
 
         <div class="form-group row">
             <div class="col" id="showPermisson">
-                <label class="col-form-label">Sub Menu Permission</label>
+                <label class="col-form-label fw-bolder">Sub Menu Permission</label>
                 <label class="switch" id="pageStatus">
                     <input type="checkbox" id="showPermissonStatus" onchange="getMenu()">
                     <span class="slider round"></span>

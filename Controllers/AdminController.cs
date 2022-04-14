@@ -3,11 +3,14 @@ using CMS_Demo.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,10 +22,15 @@ namespace CMS_Demo.Controllers
     public class AdminController : Controller
     {
         private readonly AppDbContext _con;
+        private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _Environment;
 
-        public AdminController(AppDbContext con)
+        public AdminController(AppDbContext con, IConfiguration configuration, 
+            IWebHostEnvironment webHostEnvironment)
         {
             _con = con;
+            _configuration = configuration;
+            _Environment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -108,11 +116,14 @@ namespace CMS_Demo.Controllers
                 return RedirectToAction("Login");
             }
         }
+
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult Register(RegisterViewModel model)
         {
@@ -149,6 +160,82 @@ namespace CMS_Demo.Controllers
         #endregion
 
         #region "Admin Panel Methods"
+        [HttpGet]
+        public IActionResult ManageStaticSettings()
+        {
+            if (HttpContext.Session.GetInt32("Permission6") == null)
+            {
+                return RedirectToAction("AccessDenied");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ManageStaticSettings(ManageStatics model)
+        {
+            if(model.SiteLogo != null)
+            {
+                string uniqueFileName = ProcesFileUpload(model);
+                int OldLogoCount = _con.Images.Count();
+                if(OldLogoCount != 0)
+                {
+                    ImagesPaths OldLogo = _con.Images.Find(OldLogoCount);
+                    if (OldLogo != null)
+                    {
+                        OldLogo.ImagePath = uniqueFileName;
+                        _con.Images.Update(OldLogo);
+                    }
+                }
+                else
+                {
+                    ImagesPaths images  = new ImagesPaths
+                    {
+                        ImagePath = uniqueFileName
+                    };
+                    _con.Images.Add(images);
+                }
+
+            }
+            if(model.Footer != null)
+            {
+                int FooterCount = _con.Footers.Count();
+                Footer oldFooter = _con.Footers.Find(FooterCount);
+                if(oldFooter != null)
+                {
+                    oldFooter.FooterData = model.Footer;
+                    _con.Footers.Update(oldFooter);
+                }
+                else
+                {
+                    Footer footer = new Footer
+                    {
+                        FooterData = model.Footer
+                    };
+                    _con.Footers.Add(footer);
+                }
+            }
+            _con.SaveChanges();
+            return RedirectToAction("ManageStaticSettings");
+        }
+
+        private string ProcesFileUpload(ManageStatics model)
+        {
+            string uniqueFileName = null;
+            if (model.SiteLogo != null)
+            {
+                // var uploadFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location.Substring(0, Assembly.GetEntryAssembly().Location.IndexOf("Images")));
+                string uploadsFolder = Path.Combine(_Environment.WebRootPath, "Images");
+                //string uploadsFolder = Path.Combine("./wwwroot/","Images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.SiteLogo.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var filestream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.SiteLogo.CopyTo(filestream);
+                }
+            }
+            return uniqueFileName;
+        }
+
         [HttpGet]
         public IActionResult AccessDenied()
         {
@@ -445,6 +532,7 @@ namespace CMS_Demo.Controllers
         #endregion
 
         #region "Remote Validation"
+        [AllowAnonymous]
         [AcceptVerbs("Get", "Post")]
         public JsonResult IsEmailInUsed(string email)
         {
@@ -458,7 +546,7 @@ namespace CMS_Demo.Controllers
                 return Json("This Email Is already in Used.");
             }
         }
-
+        [AllowAnonymous]
         [AcceptVerbs("Get", "Post")]
         public JsonResult IsPageInUsed(string pagename)
         {

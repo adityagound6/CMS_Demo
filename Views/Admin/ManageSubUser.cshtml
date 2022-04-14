@@ -1,35 +1,38 @@
 ﻿@model IEnumerable<Users>
 @{ 
-    ViewBag.Title = " Manange SubUser";
+    ViewBag.Title = " Manange Sub User";
 }
 
 <div class="shadow-lg p-3 mb-5 bg-white rounded col-9">
-    <h3 class="text-center">@ViewBag.Title</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Sr No.</th>
-                <th scope="col">User</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                var count = 0;
-                foreach (var User in Model)
-                {
-                    count++;
-                    <tr>
-                        <td>@count</td>
-                        <td>@User.Email</td>
-                        <td><a  class="btn btn-warning" asp-controller="admin" asp-action="EditSubUser" asp-route-id="@User.UserId">Edit</a></td>
-                        <td><button type="button" class="btn btn-danger"  onclick="DeleteUser(@User.UserId, '@User.Email')" >Delete</button></td>
-                    </tr>
+    <form class="card-body">
+        <h3 class="text-center">@ViewBag.Title</h3>
+       <hr />
+        <table class="table border-top-0">
+            <thead>
+                <tr >
+                    <th  scope="col">Sr No.</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var count = 0;
+                    foreach (var User in Model)
+                    {
+                        count++;
+                        <tr>
+                            <td scope="col">@count</td>
+                            <td scope="col">@User.Email</td>
+                            <td scope="col"><a class="btn btn-warning" asp-controller="admin" asp-action="EditSubUser" asp-route-id="@User.UserId">Edit</a></td>
+                            <td scope="col"><button type="button" class="btn btn-danger" onclick="DeleteUser(@User.UserId, '@User.Email')">Delete</button></td>
+                        </tr>
+                    }
                 }
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </form>
 </div>
 
 @section Scripts{

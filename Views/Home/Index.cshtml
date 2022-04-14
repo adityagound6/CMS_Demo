@@ -5,8 +5,16 @@
 
 <div class="card">
     <p>@Html.Raw(ViewBag.Description)</p>
-
 </div>
+
+<footer>
+    @{
+        if (ViewBag.Footer != null)
+        {
+            <p>@Html.Raw(ViewBag.Footer)</p>
+        }
+    }
+</footer>
 
 @section Scripts{
     <script>

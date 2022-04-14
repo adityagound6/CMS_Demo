@@ -2,15 +2,15 @@
 
 
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Register Form";
 }
 
 <a></a>
 
 <div class="shadow-lg p-3 mb-5 bg-white rounded col-9">
-    <h3 class="text-center">@ViewBag.Title</h3>
     <form class="card-body" asp-action="Register" asp-controller="Admin" method="post">
-        <div asp-validation-summary="All" class="text-danger"></div>
+        <h3 class="text-center">@ViewBag.Title</h3>
+        <hr />
         <div class="form-group row mb-2">
             <label asp-for="Email" class="col-sm-3 col-form-label">Email</label>
             <div class="col-sm-9">
@@ -41,11 +41,11 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
         </div>
-        <div class="row">
+        <div class="row mt-3">
             <div class="col-sm-3"></div>
             <div class="col-sm-9">
                 <button type="submit" class="btn btn-primary">Register</button>
-                <p>Already have an account <a asp-action="LogIn" asp-controller="Admin">login</a></p>
+                <p class="mt-2">Already have an account <a asp-action="LogIn" asp-controller="Admin">login</a></p>
             </div>
         </div>
 

@@ -16,6 +16,8 @@ namespace CMS_Demo.Models
         public DbSet<AddPage> AddPages { get; set; }
         public DbSet<AddRole> AddRoles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Footer> Footers { get; set; }
+        public DbSet<ImagesPaths> Images { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<AddRole>()

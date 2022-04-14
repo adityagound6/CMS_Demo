@@ -9,10 +9,10 @@ namespace CMS_Demo.ViewModels
 {
     public class AddPageViewModel
     {
-        [Required(ErrorMessage = "Please Enter a valid page Name")]
+        [Required(ErrorMessage = "Please enter a valid Page Name.")]
         [Remote(action: "IsPageInUsed", controller: "Admin")]
         public string PageName { get; set; }
-        [Required(ErrorMessage="Please Enter a valid page Description")]
+        [Required(ErrorMessage="Please enter a valid Page Description.")]
         public string Description { get; set; }
         [Display(Name ="Page Status")]
         public bool Status { get; set; }

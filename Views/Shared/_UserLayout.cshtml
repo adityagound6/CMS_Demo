@@ -17,8 +17,8 @@
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow fixed-top" style="background-color: #576868">
         <div class="container">
             @*<a class="navbar-brand text-white" asp-controller="home" asp-route-id="">Welcome To CMS_Demo</a>*@
-            <a class="navbar-brand text-white" asp-controller="home" asp-route-id="">
-                @ViewBag.ProjectName
+            <a class="navbar-brand"  asp-controller="home" asp-route-id="">
+                <img width="250" height="40" alt="Logo" src="~/Images/@ViewBag.Logo" asp-append-version="true" />
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

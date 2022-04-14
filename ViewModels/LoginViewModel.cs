@@ -9,11 +9,11 @@ namespace CMS_Demo.ViewModels
     public class LoginViewModel
     {
         [EmailAddress]
-        [Required(ErrorMessage = "Please Enter a valid UserId")]
+        [Required(ErrorMessage = "Please enter a valid UserId.")]
         [Display(Name = "User Id")]
         public string Email { get; set; }
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "Password Is Required")]
+        [Required(ErrorMessage = "Password is required.")]
         public string Password { get; set; }
     }
 }

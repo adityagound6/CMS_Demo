@@ -3,3 +3,9 @@
 
 // Write your JavaScript code.
 
+// For Editor
+new FroalaEditor('textarea#froala-editor')
+
+
+//for file name
+
