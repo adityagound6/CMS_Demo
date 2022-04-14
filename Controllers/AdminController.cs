@@ -12,6 +12,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+
 namespace CMS_Demo.Controllers
 {
     [Authorize]
@@ -33,17 +34,18 @@ namespace CMS_Demo.Controllers
         #region "Login,register and logout"
         [AllowAnonymous]
         [HttpGet]
+
         public IActionResult Login()
         {
             return View();
         }
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Login(string Email, string Password, string returnUrl)
+        public IActionResult Login(LoginViewModel model, string ReturnUrl)
         {
             try
             {
-                var user = _con.Users.Where(s => s.Email == Email & s.Password == Password).FirstOrDefault();
+                var user = _con.Users.Where(s => s.Email == model.Email & s.Password == model.Password).FirstOrDefault();
                 if (user == null)
                 {
                     ModelState.AddModelError("", "InValid UserId or Password.");
@@ -55,14 +57,12 @@ namespace CMS_Demo.Controllers
                 HttpContext.Session.SetInt32("Permission", user.Permission);
                 ViewBag.Permission = HttpContext.Session.GetInt32("Permission");
 
-                if(user.Permission == 0)
+
+                var userRoles = _con.UserRoles.Where(x => x.UserId == user.UserId).Select(y => y.RoleId).ToList();
+                for (var i = 0; i < userRoles.Count(); i++)
                 {
-                    var userRoles = _con.UserRoles.Where(x => x.UserId == user.UserId).Select(y=> y.RoleId).ToList();
-                    for(var i=0; i<userRoles.Count();i++)
-                    {
-                        var userRolesId = userRoles[i];
-                        HttpContext.Session.SetInt32($"Permission{userRolesId}", userRolesId);
-                    }
+                    var userRolesId = userRoles[i];
+                    HttpContext.Session.SetInt32($"Permission{userRolesId}", userRolesId);
                 }
                 var claims = new List<Claim>
                                  {
@@ -97,13 +97,13 @@ namespace CMS_Demo.Controllers
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
-                if (returnUrl != null)
+                if (ReturnUrl != null)
                 {
-                    return Redirect(returnUrl);
+                    return Redirect(ReturnUrl);
                 }
                 return RedirectToAction("index");
             }
-            catch(DbException)
+            catch (DbException)
             {
                 return RedirectToAction("Login");
             }
@@ -128,7 +128,7 @@ namespace CMS_Demo.Controllers
                 };
                 _con.Users.Add(user);
                 var status = _con.SaveChanges();
-                if(status == 1)
+                if (status == 1)
                 {
                     HttpContext.Session.SetString("UserName", user.UserName);
                     ViewBag.Session = HttpContext.Session.GetString("UserName");
@@ -150,12 +150,18 @@ namespace CMS_Demo.Controllers
 
         #region "Admin Panel Methods"
         [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult AddPage()
         {
-            /*if (HttpContext.Session.GetString("Permission") == null)
+            if (HttpContext.Session.GetInt32("Permission1") == null)
             {
-                return Redirect("Login?returnUrl=/Admin/Addpage");
-            }*/
+                return RedirectToAction("AccessDenied");
+            }
             return View();
         }
         [HttpPost]
@@ -169,11 +175,11 @@ namespace CMS_Demo.Controllers
                     Description = model.Description,
                     Status = true,
                     //SubPageId = null
-                   
+
                 };
                 _con.AddPages.Add(pages);
                 var status = _con.SaveChanges();
-                if(status == 1)
+                if (status == 1)
                 {
                     return RedirectToAction("AddPage");
                 }
@@ -184,12 +190,12 @@ namespace CMS_Demo.Controllers
         [HttpGet]
         public IActionResult AddSubPage()
         {
-            /*if (HttpContext.Session.GetString("Permission") == null)
+            if (HttpContext.Session.GetInt32("Permission2") == null)
             {
-                return Redirect("Login?returnUrl=/Admin/AddSubPage");
-            }*/
+                return RedirectToAction("AccessDenied");
+            }
             ViewBag.PageList = PageList();
-           //ViewBag.userRoles = RolesData();
+            //ViewBag.userRoles = RolesData();
             return View();
         }
         [HttpPost]
@@ -222,15 +228,15 @@ namespace CMS_Demo.Controllers
             PageList = _con.AddPages.ToList();
             return PageList;
         }
-        
+
 
         [Route("Admin/ManagePage")]
         public IActionResult ManagePage()
         {
-            /*if (HttpContext.Session.GetString("Permission") == null)
+            if (HttpContext.Session.GetInt32("Permission3") == null)
             {
-                return Redirect("Login?returnUrl=/Admin/ManagePage");
-            }*/
+                return RedirectToAction("AccessDenied");
+            }
             ViewBag.PageList = PageList();
             //ViewBag.userRoles = RolesData();
             return View();
@@ -239,10 +245,10 @@ namespace CMS_Demo.Controllers
         [Route("Admin/ManagePage/{id}")]
         public IActionResult ManagePage(int id)
         {
-            /*if (HttpContext.Session.GetString("Permission") == null)
+            if (HttpContext.Session.GetInt32("Permission3") == null)
             {
-                return Redirect("Login?returnUrl=/Admin/ManagePage/"+id);
-            }*/
+                return RedirectToAction("AccessDenied");
+            }
             AddPage data = _con.AddPages.Find(id);
             if (data != null)
             {
@@ -270,7 +276,7 @@ namespace CMS_Demo.Controllers
             _con.SaveChanges();
             ModelState.Clear();
             return RedirectToAction("Managepage");
-            
+
         }
 
         [HttpPost]
@@ -283,15 +289,14 @@ namespace CMS_Demo.Controllers
         [HttpGet]
         public IActionResult AddSubUser()
         {
-            /*if (HttpContext.Session.GetString("Permission") == null)
+            if (HttpContext.Session.GetInt32("Permission4") == null)
             {
-                return Redirect("Login?returnUrl=/Admin/AdSubUser/");
-            }*/
-            // ViewBag.userRoles = RolesData();
+                return RedirectToAction("AccessDenied");
+            }
             return View();
         }
         [HttpPost]
-        
+
         public IActionResult AddSubUser(AddSubUserViewModel model)
         {
             if (ModelState.IsValid)
@@ -318,10 +323,10 @@ namespace CMS_Demo.Controllers
         [HttpGet]
         public IActionResult ManageSubUser()
         {
-           /* if (HttpContext.Session.GetString("Permission") == null)
+            if (HttpContext.Session.GetInt32("Permission5") == null)
             {
-                return Redirect("Login?returnUrl=/Admin/ManageSubUser/");
-            }*/
+                return RedirectToAction("AccessDenied");
+            }
             var Users = _con.Users;
 
             return View(Users);
@@ -329,13 +334,13 @@ namespace CMS_Demo.Controllers
 
         public bool DeleteSubUser(int id)
         {
-           
+
             var User = _con.Users.Find(id);
-            if(User != null)
+            if (User != null)
             {
                 _con.Users.Remove(User);
-               int status = _con.SaveChanges();
-                if(status == 1)
+                int status = _con.SaveChanges();
+                if (status == 1)
                 {
                     return true;
                 }
@@ -346,9 +351,9 @@ namespace CMS_Demo.Controllers
         [HttpGet]
         public IActionResult EditSubUser(int id)
         {
-            if (HttpContext.Session.GetString("Permission") == null)
+            if (HttpContext.Session.GetString("Permission5") == null)
             {
-                return Redirect("Login?returnUrl=/Admin/EditSubUser/" + id);
+                return RedirectToAction("AccessDenied");
             }
             Users User = _con.Users.Find(id);
             EditSubUserViewModel subUserViewModel = new EditSubUserViewModel
@@ -367,7 +372,7 @@ namespace CMS_Demo.Controllers
             {
                 for (int i = 0; i < role.Count; i++)
                 {
-                    subUserViewModel.isActive.Add(role[i].RoleId, true);   
+                    subUserViewModel.isActive.Add(role[i].RoleId, true);
                 }
                 var roleNot = _con.AddRoles.ToList();
                 for (int j = 0; j < roleNot.Count; j++)
@@ -396,15 +401,15 @@ namespace CMS_Demo.Controllers
         public IActionResult EditSubUser(EditSubUserViewModel model)
         {
             Users User = _con.Users.Find(model.UserId);
-            if(User == null)
+            if (User == null)
             {
                 return View(model);
             }
-            
+
             User.Email = model.Email;
             User.Password = model.Password;
             var checkuser = _con.UserRoles.Where(x => x.UserId == model.UserId).ToList();
-            foreach(var userRol in checkuser)
+            foreach (var userRol in checkuser)
             {
                 var us = _con.UserRoles.Find(userRol.Id);
                 _con.UserRoles.Remove(us);
@@ -414,15 +419,15 @@ namespace CMS_Demo.Controllers
             foreach (var x in model.isActive)
             {
                 UserRole role = new UserRole();
-               
+
                 if (x.Value == true)
-               {
+                {
                     count++;
                     role.UserId = model.UserId;
                     role.RoleId = x.Key;
                     _con.UserRoles.Add(role);
                     _con.SaveChanges();
-                   
+
                 }
             }
             if (count == 5)
@@ -440,14 +445,16 @@ namespace CMS_Demo.Controllers
         #endregion
 
         #region "Remote Validation"
-        [AcceptVerbs("Get","Post")]
+        [AcceptVerbs("Get", "Post")]
         public JsonResult IsEmailInUsed(string email)
         {
             var user = _con.Users.Where(x => x.Email == email).FirstOrDefault();
-            if (user == null) {
+            if (user == null)
+            {
                 return Json(true);
-             }
-            else {
+            }
+            else
+            {
                 return Json("This Email Is already in Used.");
             }
         }

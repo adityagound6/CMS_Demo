@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.10/css/froala_editor.pkgd.min.css" integrity="sha512-2pV+HRFqOhnsJg1HTGaZxIz27M0YLsRm1LrN5MN3kWbSbKWhRNRVFXfkKOeWJs5JDqe0gkV6kcdFJq/YDSkCGg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.10/css/froala_editor.min.css" integrity="sha512-nAJK2yafVBW/IqrSgLaNgFeISsusduUoQ8WTNDvHwdnThbiGoP3Myc4fq0Z0bGS8ZowxzGLafmPtHwTp2T5qRQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <title>@ViewBag.Title</title>
 </head>
 <body>
@@ -24,7 +25,7 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav ml-auto">
                     
-                    @if (Context.Session.GetString("UserName") == null)
+                    @if (!User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-action="Register"
@@ -45,7 +46,7 @@
             </div>
         </div>
     </nav>
-    @if (Context.Session.GetString("UserName") != null)
+    @if (User.Identity.IsAuthenticated)
     {
         @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #576868">*@
         <div class="sidebar">
@@ -53,55 +54,36 @@
                 var permission = Context.Session.GetInt32("Permission");
                 if (permission != null)
                 {
-                    if (permission == 1)
+
+                    for (var i = 1; i <= 5; i++)
                     {
-                        <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
-                            Menu
-                        </a>
-                        <a asp-controller="Admin" asp-action="addsubpage" class="list-group-item">
-                            Add SubMenu
-                        </a>
-                        <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
-                            Manage Menu
-                        </a>
-                        <a asp-controller="Admin" asp-action="addsubuser" class="list-group-item">
-                            Add SubUser
-                        </a>
-                        <a asp-controller="Admin" asp-action="managesubuser" asp-route-id="" class="list-group-item">
-                            Manage SubUser
-                        </a>
-                    }
-                    else
-                    {
-                        for (var i = 1; i <= 5; i++)
+                        var name = Context.Session.GetInt32($"Permission{i}");
+                        if (name == 1)
                         {
-                            var name = Context.Session.GetInt32($"Permission{i}");
-                            if (name == 1)
-                            {
                                 <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
                                     Menu
                                 </a>
-                            }
-                            else if (name == 2)
-                            {
+                        }
+                        else if (name == 2)
+                        {
                                 <a asp-controller="Admin" asp-action="addsubpage" class="list-group-item">
                                     Add SubMenu
                                 </a>
-                            }
-                            else if (name == 3)
-                            {
+                        }
+                        else if (name == 3)
+                        {
                                 <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
                                     Manage Menu
                                 </a>
-                            }
-                            else if (name == 4)
-                            {
+                        }
+                        else if (name == 4)
+                        {
                                 <a asp-controller="Admin" asp-action="addsubuser" class="list-group-item">
                                     Add SubUser
                                 </a>
-                            }
-                            else if (name == 5)
-                            {
+                        }
+                        else if (name == 5)
+                        {
                                 <a asp-controller="Admin" asp-action="managesubuser" asp-route-id="" class="list-group-item">
                                     Manage SubUser
                                 </a>
@@ -109,8 +91,6 @@
                         }
                     }
                 }
-            }
-            }
         </div>
 
     }
