@@ -1,4 +1,6 @@
-﻿@*@model IEnumerable<AddRoles>*@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -17,14 +19,14 @@
     <!--Nav Bar Or Header-->
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow fixed-top" style="background-color: #576868">
         <div class="container">
-            <a class="navbar-brand text-white-50" asp-controller="admin" asp-action="index">Welcome To CMS_Demo</a>
+            <a class="navbar-brand text-white" asp-controller="admin" asp-action="index">@Configuration["ProjectName"]</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav ml-auto">
-                    
+
                     @if (!User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
@@ -49,55 +51,55 @@
     @if (User.Identity.IsAuthenticated)
     {
         @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #576868">*@
-<div class="sidebar">
-    @{
-        var permission = Context.Session.GetInt32("Permission");
-        if (permission != null)
-        {
+        <div class="sidebar">
+            @{
+                var permission = Context.Session.GetInt32("Permission");
+                if (permission != null)
+                {
 
-            for (var i = 1; i <= 6; i++)
-            {
-                var name = Context.Session.GetInt32($"Permission{i}");
-                if (name == 1)
-                {
-                    <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
-                        Menu
-                    </a>
-                }
-                else if (name == 2)
-                {
-                    <a asp-controller="Admin" asp-action="addsubpage" class="list-group-item">
-                        Add SubMenu
-                    </a>
-                }
-                else if (name == 3)
-                {
-                    <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
-                        Manage Menu
-                    </a>
-                }
-                else if (name == 4)
-                {
-                    <a asp-controller="Admin" asp-action="addsubuser" class="list-group-item">
-                        Add SubUser
-                    </a>
-                }
-                else if (name == 5)
-                {
-                    <a asp-controller="Admin" asp-action="managesubuser" asp-route-id="" class="list-group-item">
-                        Manage SubUser
-                    </a>
-                }
-                else if (name == 6)
-                {
-                    <a asp-controller="Admin" asp-action="managestaticsettings" asp-route-id="" class="list-group-item">
-                        Manage Static Settings
-                    </a>
+                    for (var i = 1; i <= 6; i++)
+                    {
+                        var name = Context.Session.GetInt32($"Permission{i}");
+                        if (name == 1)
+                        {
+                            <a asp-controller="Admin" asp-action="addpage" class="list-group-item">
+                                Menu
+                            </a>
+                        }
+                        else if (name == 2)
+                        {
+                            <a asp-controller="Admin" asp-action="addsubpage" class="list-group-item">
+                                Add SubMenu
+                            </a>
+                        }
+                        else if (name == 3)
+                        {
+                            <a asp-controller="Admin" asp-action="managepage" asp-route-id="" class="list-group-item">
+                                Manage Menu
+                            </a>
+                        }
+                        else if (name == 4)
+                        {
+                            <a asp-controller="Admin" asp-action="addsubuser" class="list-group-item">
+                                Add SubUser
+                            </a>
+                        }
+                        else if (name == 5)
+                        {
+                            <a asp-controller="Admin" asp-action="managesubuser" asp-route-id="" class="list-group-item">
+                                Manage SubUser
+                            </a>
+                        }
+                        else if (name == 6)
+                        {
+                            <a asp-controller="Admin" asp-action="managestaticsettings" asp-route-id="" class="list-group-item">
+                                Manage Static Settings
+                            </a>
+                        }
+                    }
                 }
             }
-        }
-    }
-</div>
+        </div>
 
     }
     <div class="content mt-5">

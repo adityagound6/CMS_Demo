@@ -32,7 +32,6 @@ namespace CMS_Demo.Controllers
                SubPageId = x.SubPageId
             }).ToList();
 
-            ViewBag.ProjectName = _configuration["ProjectName"];
             var data = _con.AddPages.Find(id ?? 1);
             ViewBag.PageName = data.PageName;
             ViewBag.Description = data.Description;
