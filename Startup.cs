@@ -52,13 +52,14 @@ namespace CMS_Demo
                 app.UseDeveloperExceptionPage();
             }
             app.UseStaticFiles();
-           // app.UseRouting();
+            app.UseRouting();
             app.UseAuthentication();
             //app.UseAuthorization();
             app.UseSession();
+            app.UseMvcWithDefaultRoute();
            // app.UseCookiePolicy(cookiePolicyOptions);
             app.UseMvc(route => {
-                route.MapRoute("default", "{controller=Home}/{action=index}/{id?}");
+                route.MapRoute("default", "{controller=Home}/{action=index}/{id?}/{id1?}");
 
             });
         }

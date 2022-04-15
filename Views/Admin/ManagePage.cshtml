@@ -2,9 +2,10 @@
 @{
     ViewBag.Title = "Manage page";
 }
-<div class="shadow-lg p-3 mb-5 bg-white rounded col-9 card">
+<div class="shadow-lg p-3 mb-5 bg-white rounded card">
     
-    <form class="card-body" method="post">
+    <form class="card-body" method="post" asp-action="ManagePage" asp-controller="admin" >
+
         <h3 class="text-center">@ViewBag.Title</h3>
         <hr />
         <div class="form-group row">
@@ -14,13 +15,14 @@
                 <option value="">--Select Page--</option>
             </select>
         </div>
-       
+
         <input asp-for="PageId" hidden />
+        <input hidden asp-for="PageName" data-val="false" />
         <div class="form-group row">
             <label class="col-form-label fw-bolder">Page Name</label>
             <div class="col" id="pagename">
-                <input asp-for="PageName" class="form-control" data-val="false" style="text-transform: capitalize;" />
-                <span asp-validation-for="PageName" class="text-danger"></span>
+                <input asp-for="NewPageName" class="form-control" style="text-transform: capitalize;" />
+                <span asp-validation-for="NewPageName" class="text-danger"></span>
             </div>
         </div>
         @*   }

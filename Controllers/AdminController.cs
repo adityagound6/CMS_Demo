@@ -167,7 +167,15 @@ namespace CMS_Demo.Controllers
             {
                 return RedirectToAction("AccessDenied");
             }
-            return View();
+            var footer = _con.Footers.Find(1).FooterData;
+            var logo = _con.Images.Find(1).ImagePath;
+            ManageStatics manageStatics = new ManageStatics
+            {
+                Footer = footer,
+
+            };
+
+            return View(manageStatics);
         }
 
         [HttpPost]
@@ -326,7 +334,7 @@ namespace CMS_Demo.Controllers
             }
             ViewBag.PageList = PageList();
             //ViewBag.userRoles = RolesData();
-            return View();
+            return View("ManagePage");
         }
 
         [Route("Admin/ManagePage/{id}")]
@@ -342,6 +350,7 @@ namespace CMS_Demo.Controllers
                 ManagePageViewModel managePageView = new ManagePageViewModel
                 {
                     PageId = data.PageId,
+                    NewPageName = data.PageName,
                     PageName = data.PageName,
                     Description = data.Description,
                     Status = data.Status
@@ -353,10 +362,10 @@ namespace CMS_Demo.Controllers
         }
 
         [HttpPost("Admin/ManagePage/{id}")]
-        public IActionResult ManagePage(AddPage model)
+        public IActionResult ManagePage(ManagePageViewModel model)
         {
             AddPage data = _con.AddPages.Find(model.PageId);
-            data.PageName = model.PageName;
+            data.PageName = model.NewPageName;
             data.Description = model.Description;
             data.Status = model.Status;
             _con.AddPages.Update(data);
@@ -517,7 +526,7 @@ namespace CMS_Demo.Controllers
 
                 }
             }
-            if (count == 5)
+            if (count == 6)
             {
                 User.Permission = 1;
             }
@@ -548,17 +557,25 @@ namespace CMS_Demo.Controllers
         }
         [AllowAnonymous]
         [AcceptVerbs("Get", "Post")]
-        public JsonResult IsPageInUsed(string pagename)
-        {
-            var page = _con.AddPages.Where(x => x.PageName == pagename).FirstOrDefault();
-            if (page == null)
+        public JsonResult IsPageInUsed(string pagename, string NewPageName)
+      {
+            if(pagename != NewPageName)
             {
-                return Json(true);
+                var page = _con.AddPages.Where(x => x.PageName == (NewPageName ?? pagename)).FirstOrDefault();
+                if (page == null)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json((NewPageName ?? pagename) + " Page Is already Exist.");
+                }
             }
             else
             {
-                return Json(pagename + " Page Is already Exist.");
+                return Json(true);
             }
+            
         }
         #endregion
     }

@@ -6,6 +6,10 @@
 // For Editor
 new FroalaEditor('textarea#froala-editor')
 
+function OpenMenu() {
+    if (document.getElementById('SideMenu').clientWidth > 700) {
 
+    }
+}
 //for file name
 
