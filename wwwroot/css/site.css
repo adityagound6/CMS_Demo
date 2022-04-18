@@ -113,16 +113,18 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-.sidebar {
-    margin: 0;
+.sidebarmenu  {
+    
     padding: 0;
-    width: 200px;
     background-color: #4bac5e;
     position: fixed;
     height: 100%;
     overflow: auto;
 }
-
+.sidebarmenu > .list-group-item {
+        background: #4bac5e;
+        color:white;
+    }
 .sidebar a {
     display: block;
     color: white;
