@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace CMS_Demo.Controllers
 {
+    [Route("[controller]")]
     public class HomeController : Controller
     {
         private readonly AppDbContext _con;
@@ -21,8 +22,9 @@ namespace CMS_Demo.Controllers
             _con = con;
             _configuration = configuration;
         }
-        [HttpGet]
-        public IActionResult Index(int? id)
+        [Route("/")]
+        [Route("/{id}")]
+        public IActionResult Index(string id )
         {
             List<Nav_List >nav_List = new List<Nav_List>();
             nav_List = _con.AddPages.Where(x => x.Status == true).Select(x => new Nav_List{
@@ -31,8 +33,7 @@ namespace CMS_Demo.Controllers
                PageName =  x.PageName,
                SubPageId = x.SubPageId
             }).ToList();
-
-            var data = _con.AddPages.Find(id ?? 1);
+            var data = _con.AddPages.Where(s=>s.PageName == (id ?? "Home")).FirstOrDefault();
             ViewBag.PageName = data.PageName;
             ViewBag.Description = data.Description;
 

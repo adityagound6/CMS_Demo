@@ -7,7 +7,7 @@ namespace CMS_Demo.ViewModels
 {
     public class AddSubPageViewModel :AddPageViewModel
     {
-        public int PageId { get; set; }
+        public int PageIds { get; set; }
         public int MainMenu { get; set; }
     }
 }

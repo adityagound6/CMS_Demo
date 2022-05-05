@@ -5,9 +5,9 @@
 @{
     ViewBag.Title = "Login Panel - " + Configuration["ProjectName"];
 }
-@if (Context.Session.GetString("UserName") == null)
+@if (@User.Identity.Name == null)
 {
-    <div class="shadow-lg p-3 mb-5 bg-white rounded ">
+    <div class="shadow-lg p-3 mb-5 bg-white rounded col-9">
 
         <form class="card-body " method="post">
             <h1 class="text-center">@ViewBag.Title</h1>

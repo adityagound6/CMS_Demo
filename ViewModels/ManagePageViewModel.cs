@@ -9,7 +9,7 @@ namespace CMS_Demo.ViewModels
 {
     public class ManagePageViewModel : AddSubPageViewModel
     {
-       
+       public int PageId { get; set; }
         [Remote(action: "IsPageInUsed", controller: "Admin", AdditionalFields = nameof(PageName))]
         public string NewPageName { get; set; }
     }

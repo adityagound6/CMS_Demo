@@ -9,7 +9,7 @@
         @*<input type="hidden" asp-for="PageName" />*@
         <div class="form-group row">
             <label class="col-form-label fw-bolder" asp-for="PageName"></label>
-            <select asp-for="PageId" id="pageid" class="custom-select mr-sm-2"
+            <select asp-for="PageIds" id="pageid" class="custom-select mr-sm-2"
                     asp-items='@(new SelectList(ViewBag.PageList, "PageId", "PageName"))'>
                 <option value="">--Select Page--</option>
             </select>

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -32,8 +33,7 @@ namespace CMS_Demo.Controllers
             _configuration = configuration;
             _Environment = webHostEnvironment;
         }
-
-        [HttpGet]
+        [Route("admin/")]
         public IActionResult Index()
         {
             return View();
@@ -59,13 +59,7 @@ namespace CMS_Demo.Controllers
                     ModelState.AddModelError("", "InValid UserId or Password.");
                     return View();
                 }
-                HttpContext.Session.SetString("UserName", user.UserName);
-                ViewBag.Session = HttpContext.Session.GetString("UserName");
-
-                HttpContext.Session.SetInt32("Permission", user.Permission);
-                ViewBag.Permission = HttpContext.Session.GetInt32("Permission");
-
-
+                
                 var userRoles = _con.UserRoles.Where(x => x.UserId == user.UserId).Select(y => y.RoleId).ToList();
                 for (var i = 0; i < userRoles.Count(); i++)
                 {
@@ -75,9 +69,11 @@ namespace CMS_Demo.Controllers
                 var claims = new List<Claim>
                                  {
                                      new Claim("UserId",user.UserId.ToString()),
-                                     new Claim("Username",user.UserName),
-                                     new Claim("Name",user.Name),
-                                     new Claim("Email", user.Email),
+                                     new Claim("UserName",user.UserName),
+                                     new Claim(ClaimTypes.Name,user.Name),
+                                     new Claim(ClaimTypes.Email, user.Email),
+                                    // new Claim(ClaimTypes.myNewClaim,user.Email),
+                                     //new Claim("",userRoles),
                                  };
 
                 var claimsIdentity = new ClaimsIdentity(
@@ -109,7 +105,7 @@ namespace CMS_Demo.Controllers
                 {
                     return Redirect(ReturnUrl);
                 }
-                return RedirectToAction("index");
+                return RedirectToAction("index","admin");
             }
             catch (DbException)
             {
@@ -298,22 +294,20 @@ namespace CMS_Demo.Controllers
         {
             if (ModelState.IsValid)
             {
-                AddPage pages = new AddPage
-                {
-                    PageName = model.PageName,
-                    Description = model.Description,
-                    Status = true,
-                    SubPageId = model.PageId
-
-                };
-                _con.AddPages.Add(pages);
+                    AddPage pages = new AddPage
+                    {
+                        PageName = model.PageName,
+                        Description = model.Description,
+                        Status = true,
+                        SubPageId = model.PageIds
+                    };
+                    _con.AddPages.Add(pages);
+                }
                 var status = _con.SaveChanges();
                 if (status == 1)
                 {
                     return RedirectToAction("AddSubPage");
                 }
-            }
-
             return View(model);
         }
 
@@ -536,7 +530,7 @@ namespace CMS_Demo.Controllers
             }
             _con.Users.Update(User);
             _con.SaveChanges();
-            return RedirectToAction("index");
+            return RedirectToAction("EditSubUser");
         }
         #endregion
 

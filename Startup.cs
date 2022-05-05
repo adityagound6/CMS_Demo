@@ -1,18 +1,15 @@
+using CMS_Demo.Controllers;
 using CMS_Demo.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace CMS_Demo
 {
@@ -27,13 +24,14 @@ namespace CMS_Demo
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<AppDbContext>(option =>
-            option.UseSqlServer(_config.GetConnectionString("DBConnection")));
-            //services.AddDistributedMemoryCache();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                    .AddCookie(options => options.LoginPath = new PathString("/Admin/Login"));
+                       .AddCookie(options => options.LoginPath = new PathString("/Admin/Login"));
+            services.AddDbContextPool<AppDbContext>(option =>
+                        option.UseSqlServer(_config.GetConnectionString("DBConnection")));
+            //services.AddTransient<IClaimsTransformation, MyClaimsTransformation>();
+            //services.AddDistributedMemoryCache();
+            
             services.AddSession();
-
             services.AddMvc(options => {
                 options.EnableEndpointRouting = false;
                 /*var policy = new AuthorizationPolicyBuilder()
@@ -58,10 +56,10 @@ namespace CMS_Demo
             app.UseSession();
             app.UseMvcWithDefaultRoute();
            // app.UseCookiePolicy(cookiePolicyOptions);
-            app.UseMvc(route => {
+            app.UseMvc(/*route => {
                 route.MapRoute("default", "{controller=Home}/{action=index}/{id?}/{id1?}");
 
-            });
+            }*/);
         }
     }
 }

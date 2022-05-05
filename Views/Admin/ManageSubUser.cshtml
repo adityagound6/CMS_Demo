@@ -12,8 +12,7 @@
                 <tr >
                     <th  scope="col">Sr No.</th>
                     <th scope="col">User</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,9 +23,11 @@
                         count++;
                         <tr>
                             <td scope="col">@count</td>
-                            <td scope="col">@User.Email</td>
-                            <td scope="col"><a class="btn btn-warning" asp-controller="admin" asp-action="EditSubUser" asp-route-id="@User.UserId">Edit</a></td>
-                            <td scope="col"><button type="button" class="btn btn-danger" onclick="DeleteUser(@User.UserId, '@User.Email')">Delete</button></td>
+                            <td scope="col" class="fw-bold">@User.Email</td>
+                            <td scope="col">
+                            <a title="Edit" asp-controller="admin" asp-action="EditSubUser" asp-route-id="@User.UserId"><i class="fa fa-edit mr-3"></i></a>
+                            <a title="Delete"  onclick="DeleteUser(@User.UserId, '@User.Email')"><i class="fa fa-trash"></i></a>
+                            </td>
                         </tr>
                     }
                 }

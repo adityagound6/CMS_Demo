@@ -29,6 +29,7 @@
 
         <div class=" collapse navbar-collapse ml-0 justify-content-center" style="width: 100%;" id="navbarSupportedContent">
             <ul class="navbar-nav">
+                
 
                 @foreach (var m in Model)
                 {
@@ -38,7 +39,7 @@
                         <li class="nav-item mr-3">
 
                             <a class="text-white px-0 text-decoration-none m-2 "
-                               asp-action="Index" asp-controller="home" asp-route-id="@m.PageId" style="outline-color:transparent;">
+                               asp-action="Index" asp-controller="home" asp-route-id="@m.PageName" style="outline-color:transparent;">
                                 @m.PageName
                             </a>
 
@@ -50,17 +51,16 @@
                                         count++;
                                         <li>
                                             <a class="dropdown-item"
-                                               asp-action="Index" asp-controller="home" asp-route-id="@n.PageId">@n.PageName</a>
+                                               asp-action="Index" asp-controller="home" asp-route-id="@n.PageName">@n.PageName</a>
                                         </li>
                                     }
-
                                 }
                             </ul>
                             @{
                                 if (count > 0)
                                 {
                                     <a class=" px-0 text-white dropdown-toggle dropdown-toggle-split mr-3"
-                                       asp-action="Index" asp-controller="home" asp-route-id="@m.PageId">
+                                       asp-action="Index" asp-controller="home" asp-route-id="@m.PageName">
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </a>
                                 }
